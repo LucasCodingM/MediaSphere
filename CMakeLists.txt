@@ -23,6 +23,7 @@ qt_add_qml_module(appRaspGui
         QML_FILES Menu.qml
         QML_FILES MenuPage1.qml
         QML_FILES MenuPage2.qml
+        RESOURCES assets/audio.png assets/back.png assets/bluetooth.png assets/buttoncomboBox.png assets/casque.png assets/folder.png assets/gameFlappyBird.png assets/gameMario.png assets/gamePacman,.png assets/games.png assets/gameSnake.png assets/loop.png assets/MainMenu.png assets/Movie.png assets/music.png assets/music2.png assets/next.png assets/parameter.png assets/parameter2.png assets/pause.png assets/play.png assets/plus.png assets/power.png assets/previous.png assets/speaker.png assets/star.png assets/trashbin.png assets/weather.png assets/weatherCloudy.png assets/weatherRain.png assets/weatherSun.png
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
