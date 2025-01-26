@@ -1,45 +1,41 @@
 import QtQuick
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 
 //window resolution: 1024x600
 Button {
-    id: butonBlueGradient
+    id: buttonBlue
     width: 200
     height: 185
-    //radius: 37
+    property string sPathIcone: ""
+    property real iconeWidth: width - 40
+    property real iconeHeight: height - 40
     background: Rectangle {
         id: bgnRec
         radius: 37
-        color: "black"
         visible: true
+        opacity: enabled ? 1 : 0.3
+        border.color: buttonBlue.down ? "white" : "transparent"
+        border.width: 2
+        property color colorStart: buttonBlue.down ? "#0e1d30" : "#2f63a8"
+        property color colorEnd: buttonBlue.down ? "black" : "#0e1d30"
         gradient: Gradient {
-            orientation: Gradient.Horizontal
+            orientation: Gradient.Vertical
             GradientStop {
                 position: 0.0
-                color: "#2f63a8"
+                color: bgnRec.colorStart
             }
             GradientStop {
                 position: 1.0
-                color: "black"
+                color: bgnRec.colorEnd
             }
         }
-
-        // LinearGradient {
-        //     anchors.fill: parent
-        //     source: bgnRec
-        //     start: Qt.point(0, 0)
-        //     end: Qt.point(parent.height, parent.width)
-        //     gradient: Gradient {
-        //         GradientStop {
-        //             position: 0.0
-        //             color: "#2f63a8"
-        //         }
-        //         GradientStop {
-        //             position: 1.0
-        //             color: "black"
-        //         }
-        //     }
-        // }
+        Image {
+            id: icone
+            source: ResourcesComponents.rootAssetsPath + buttonBlue.sPathIcone
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+            width: buttonBlue.iconeWidth
+            height: buttonBlue.iconeHeight
+        }
     }
 }

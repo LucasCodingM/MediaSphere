@@ -2,7 +2,9 @@ import QtQuick
 import QtQuick.Controls
 
 Item {
+    id: mainMenu
     anchors.fill: parent
+
     SwipeView {
         id: view
         currentIndex: 0

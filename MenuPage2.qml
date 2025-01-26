@@ -10,5 +10,6 @@ Item {
         y: 0.12 * parent.height
         width: 0.2 * parent.width
         height: 0.3 * parent.height
+        sPathIcone: "parameter"
     }
 }

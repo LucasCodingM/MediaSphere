@@ -1,3 +1,4 @@
+//import ResourcesComponents
 import QtQuick
 
 Item {
@@ -15,6 +16,7 @@ Item {
         y: menuPage1.topPos
         width: 0.2 * parent.width
         height: 0.3 * parent.height
+        sPathIcone: "music"
     }
     ButtonBlueGradient {
         id: buttonWeather
@@ -22,6 +24,8 @@ Item {
         y: menuPage1.topPos
         width: 0.2 * parent.width
         height: 0.3 * parent.height
+        sPathIcone: "weather"
+        onClicked: ResourcesComponents.loadComponent("weather")
     }
     ButtonBlueGradient {
         id: buttonVideoPlayer
@@ -29,6 +33,7 @@ Item {
         y: menuPage1.bottomPos
         width: 0.2 * parent.width
         height: 0.3 * parent.height
+        sPathIcone: "movie"
     }
     ButtonBlueGradient {
         id: buttonGames
@@ -36,5 +41,6 @@ Item {
         y: menuPage1.bottomPos
         width: 0.2 * parent.width
         height: 0.3 * parent.height
+        sPathIcone: "games"
     }
 }

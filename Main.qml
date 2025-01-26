@@ -12,5 +12,13 @@ Window {
 
     Header {}
 
-    Menu {}
+    Loader {
+        id: loader
+        anchors.fill: parent
+    }
+
+    Component.onCompleted: {
+        ResourcesComponents.setLoader(loader)
+        ResourcesComponents.loadComponent("menu")
+    }
 }
