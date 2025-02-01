@@ -38,7 +38,7 @@ void openMeteoAPI::fetchWeather()
 QJsonArray openMeteoAPI::getListDaysWeatherCode()
 {
     if (m_jsonInfoWeather.empty()) {
-        THROW_CUSTOM_EXCEPTION("Weather data not available");
+        THROW_CUSTOM_EXCEPTION("weather code not available");
         return QJsonArray();
     }
     return m_jsonInfoWeather["weather_code"].toArray();
@@ -47,7 +47,7 @@ QJsonArray openMeteoAPI::getListDaysWeatherCode()
 double openMeteoAPI::getTemperature()
 {
     if (m_jsonInfoWeather.empty()) {
-        THROW_CUSTOM_EXCEPTION("Weather temperature not available");
+        THROW_CUSTOM_EXCEPTION("weather temperature not available");
         return 0;
     }
     return m_jsonInfoWeather["current"].toObject()["temperature_2m"].toDouble();

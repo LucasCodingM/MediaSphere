@@ -17,11 +17,10 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
     engine.loadFromModule("RaspGui", "Main");
 
+    Logger oLogger("application.log"); // Log to 'application.log' file
+    openMeteoAPI openMeteoApi;
     try {
-        Logger oLogger("application.log"); // Log to 'application.log' file
-        openMeteoAPI openMeteoApi;
         openMeteoApi.fetchWeather();
-        openMeteoApi.getTemperature();
     } catch (const CustomException &e) {
         // Catching the custom exception and handling it
         qCritical() << e.getDetailMessage();
