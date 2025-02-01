@@ -10,11 +10,16 @@ Window {
 
     Background {}
 
-    Header {}
+    Header {
+        id: header
+    }
 
     Loader {
         id: loader
         anchors.fill: parent
+        onSourceComponentChanged: {
+            header.setMenuHeader(ResourcesComponents.currentWindowName)
+        }
     }
 
     Component.onCompleted: {

@@ -9,6 +9,8 @@ Item {
 
     property string rootAssetsPath: "qrc:/qt/qml/RaspGui/assets/"
 
+    property int currentWindowName: -1
+
     function getLoader() {
         return loader
     }
@@ -18,6 +20,7 @@ Item {
     }
 
     function loadComponent(choiceEnumComponent) {
+        currentWindowName = choiceEnumComponent
         switch (choiceEnumComponent) {
         case Enum.WindowName.Menu:
         {
