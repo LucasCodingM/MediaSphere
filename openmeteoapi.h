@@ -17,10 +17,13 @@ class openMeteoAPI : public QObject
 public:
     explicit openMeteoAPI(QObject *parent = nullptr);
 
-    void fetchWeather();
+    void clearJsonData();
+    Q_INVOKABLE void fetchWeather();
+    Q_INVOKABLE bool getIsDataAvailable();
     Q_INVOKABLE QJsonArray getListDaysWeatherCode();
     Q_INVOKABLE double getTemperature();
-
+signals:
+    void requestFinished();
 public slots:
     void serviceRequestFinished(QNetworkReply *networkReply);
 
@@ -29,6 +32,7 @@ private:
     QNetworkReply *m_reply;
     QNetworkAccessManager *m_networkManager;
     QJsonObject m_jsonInfoWeather;
+    bool m_bIsDataAvailable;
 signals:
 };
 

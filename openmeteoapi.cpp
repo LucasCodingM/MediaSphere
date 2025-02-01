@@ -7,6 +7,7 @@ openMeteoAPI::openMeteoAPI(QObject *parent)
             "forecast?latitude=48.112&longitude=-1.6743&current=temperature_2m&daily=weather_code&"
             "timezone=auto&forecast_days=3")
     , m_reply(nullptr)
+    , m_bIsDataAvailable(false)
 {
     m_networkManager = new QNetworkAccessManager(this);
     QObject::connect(m_networkManager,
@@ -28,11 +29,25 @@ void openMeteoAPI::serviceRequestFinished(QNetworkReply *networkReply)
     QJsonDocument doc = QJsonDocument::fromJson(response);
     m_jsonInfoWeather = doc.object();
     m_reply->deleteLater();
+    m_bIsDataAvailable = true;
+    emit requestFinished();
 }
 
 void openMeteoAPI::fetchWeather()
 {
+    m_bIsDataAvailable = false;
+    clearJsonData();
     m_networkManager->get(QNetworkRequest(m_url));
+}
+
+void openMeteoAPI::clearJsonData()
+{
+    m_jsonInfoWeather = QJsonObject();
+}
+
+bool openMeteoAPI::getIsDataAvailable()
+{
+    return m_bIsDataAvailable;
 }
 
 QJsonArray openMeteoAPI::getListDaysWeatherCode()

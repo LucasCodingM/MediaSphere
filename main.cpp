@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include "customexception.h"
 #include "logger.h"
 #include "openmeteoapi.h"
@@ -8,6 +9,9 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+    Logger oLogger("application.log"); // Log to 'application.log' file
+    openMeteoAPI openMeteoApi;
+
     QQmlApplicationEngine engine;
     QObject::connect(
         &engine,
@@ -15,10 +19,11 @@ int main(int argc, char *argv[])
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
+
+    // Expose the object to QML context
+    engine.rootContext()->setContextProperty("openMeteoApi", &openMeteoApi);
     engine.loadFromModule("RaspGui", "Main");
 
-    Logger oLogger("application.log"); // Log to 'application.log' file
-    openMeteoAPI openMeteoApi;
     try {
         openMeteoApi.fetchWeather();
     } catch (const CustomException &e) {
