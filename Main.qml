@@ -19,6 +19,6 @@ Window {
 
     Component.onCompleted: {
         ResourcesComponents.setLoader(loader)
-        ResourcesComponents.loadComponent("menu")
+        ResourcesComponents.loadComponent(Enum.WindowName.Menu)
     }
 }

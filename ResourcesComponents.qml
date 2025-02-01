@@ -4,8 +4,6 @@ import QtQuick
 
 Item {
     id: resourcesComponents
-    width: 1024
-    height: 600
 
     property Item loader
 
@@ -19,12 +17,24 @@ Item {
         loader = itemLoader
     }
 
-    function loadComponent(sComponentName) {
-        if (sComponentName == "menu")
+    function loadComponent(choiceEnumComponent) {
+        switch (choiceEnumComponent) {
+        case Enum.WindowName.Menu:
+        {
             loader.sourceComponent = menuComponent
-        if (sComponentName == "weather")
+            break
+        }
+        case Enum.WindowName.Weather:
+        {
             loader.sourceComponent = weatherComponent
-        return Item
+            break
+        }
+        default:
+        {
+            loader.sourceComponent = Item
+            break
+        }
+        }
     }
 
     Component {

@@ -14,6 +14,7 @@ Button {
         visible: true
         opacity: enabled ? 1 : 0.3
         color: "transparent"
+        border.color: buttonBack.pressed ? "white" : "transparent"
 
         Image {
             id: icone

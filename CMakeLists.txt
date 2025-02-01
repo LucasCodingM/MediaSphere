@@ -29,6 +29,10 @@ qt_add_qml_module(appRaspGui
         QML_FILES Weather.qml
         QML_FILES ResourcesComponents.qml
         QML_FILES ButtonBack.qml
+        SOURCES openmeteoapi.h openmeteoapi.cpp
+        QML_FILES Enum.qml
+        SOURCES logger.h logger.cpp
+        SOURCES customexception.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

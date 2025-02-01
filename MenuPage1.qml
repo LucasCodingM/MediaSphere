@@ -25,7 +25,7 @@ Item {
         width: 0.2 * parent.width
         height: 0.3 * parent.height
         sPathIcone: "weather"
-        onClicked: ResourcesComponents.loadComponent("weather")
+        onClicked: ResourcesComponents.loadComponent(Enum.WindowName.Weather)
     }
     ButtonBlueGradient {
         id: buttonVideoPlayer
