@@ -28,7 +28,9 @@ int main(int argc, char *argv[])
         openMeteoApi.fetchWeather();
     } catch (const CustomException &e) {
         // Catching the custom exception and handling it
-        qCritical() << e.getDetailMessage();
+        qCritical() << e.what();
+    } catch (...) {
+        std::cerr << "Caught unknown exception!" << std::endl;
     }
 
     return app.exec();

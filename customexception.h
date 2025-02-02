@@ -17,8 +17,12 @@ public:
         m_errorDetailMessage = QString("Exception at %1:%2:  %3")
                                    .arg(fileNameSplitted)
                                    .arg(m_lineNumber)
-                                   .arg(m_errorMessage);
+                                   .arg(m_errorMessage)
+                                   .toUtf8()
+                                   .constData();
     }
+
+    const char *what() const noexcept override { return m_errorDetailMessage; }
 
     void raise() const override
     {
@@ -29,16 +33,14 @@ public:
         return new CustomException(*this); // Clone the exception
     }
 
-    const QString &getMessage() const
+    const QString getMessage() const
     {
         return m_errorMessage; // Return the error message
     }
 
-    const QString &getDetailMessage() const { return m_errorDetailMessage; }
-
 private:
     QString m_errorMessage;       // The message to store in the exception
-    QString m_errorDetailMessage; // The detail message to store in the exception
+    const char *m_errorDetailMessage; // The detail message to store in the exception
     const char *m_fileName;
     int m_lineNumber;
 };

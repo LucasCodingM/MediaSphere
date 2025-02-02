@@ -8,6 +8,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QObject>
+#include <QTimer>
 
 //Requête https pour récupérer la météo
 //https://api.open-meteo.com/v1/forecast?latitude=48.11&longitude=-1.6744&hourly=temperature_2m,weather_code&timezone=auto&forecast_days=3
@@ -26,6 +27,11 @@ signals:
     void requestFinished();
 public slots:
     void serviceRequestFinished(QNetworkReply *networkReply);
+    void onTimeout()
+    {
+        //Every hour the system fetch the weather
+        fetchWeather();
+    }
 
 private:
     const QUrl m_url;

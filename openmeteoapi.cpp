@@ -14,13 +14,24 @@ openMeteoAPI::openMeteoAPI(QObject *parent)
                      &QNetworkAccessManager::finished,
                      this,
                      &openMeteoAPI::serviceRequestFinished);
+    QTimer *timer = new QTimer(this); // `this` sets openMeteoAPI as the parent of the QTimer
+    connect(timer,
+            &QTimer::timeout,
+            this,
+            &openMeteoAPI::onTimeout); // Connect the timeout signal to the slot
+    timer->start(60000);               // Start the timer in ms interval (1h)
 }
 
 void openMeteoAPI::serviceRequestFinished(QNetworkReply *networkReply)
 {
     m_reply = networkReply;
     if (m_reply->error() != QNetworkReply::NoError) {
-        THROW_CUSTOM_EXCEPTION(m_reply->errorString());
+        //catching exception in slot is needed
+        try {
+            THROW_CUSTOM_EXCEPTION(m_reply->errorString());
+        } catch (const CustomException &e) {
+            qCritical() << e.what();
+        }
         return;
     }
     qDebug() << "Receive https reply";

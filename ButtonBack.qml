@@ -3,13 +3,13 @@ import QtQuick.Controls
 
 Button {
     id: buttonBack
-    width: 100
-    height: 100
+    width: 0.3 * parent.width
+    height: 0.17 * parent.height
+    property string textButtonBack: "MAIN MENU"
     property string sPathIcone: "back.png"
-    property real iconeWidth: width - 40
-    property real iconeHeight: height - 40
     background: Rectangle {
         id: bgnRec
+
         radius: 37
         visible: true
         opacity: enabled ? 1 : 0.3
@@ -20,9 +20,23 @@ Button {
             id: icone
             source: ResourcesComponents.rootAssetsPath + buttonBack.sPathIcone
             fillMode: Image.PreserveAspectFit
-            anchors.centerIn: parent
-            width: buttonBack.iconeWidth
-            height: buttonBack.iconeHeight
+            anchors.left: parent.left
+            anchors.leftMargin: 0.03 * parent.width
+            anchors.verticalCenter: parent.verticalCenter
+            width: 0.3 * parent.width
+            height: width
+        }
+
+        Text {
+            id: text
+            anchors.left: icone.right
+            anchors.leftMargin: 0.07 * parent.width
+            anchors.verticalCenter: icone.verticalCenter
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            text: buttonBack.textButtonBack
+            font.pixelSize: 0.1 * parent.width
+            color: "white"
         }
     }
 }

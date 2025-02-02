@@ -5,8 +5,8 @@ Item {
     anchors.fill: parent
 
     ButtonBack {
-        x: 50
-        y: 100
+        x: 0.05 * parent.width
+        y: 0.17 * parent.height
         onClicked: ResourcesComponents.loadComponent(Enum.WindowName.Menu)
     }
 
