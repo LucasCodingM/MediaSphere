@@ -21,17 +21,13 @@ public:
     void clearJsonData();
     Q_INVOKABLE void fetchWeather();
     Q_INVOKABLE bool getIsDataAvailable();
-    Q_INVOKABLE QJsonArray getListDaysWeatherCode();
-    Q_INVOKABLE double getTemperature();
+    Q_INVOKABLE QJsonObject getListDailyWeatherData();
+    Q_INVOKABLE QJsonObject getCurrentWeatherData();
 signals:
     void requestFinished();
 public slots:
     void serviceRequestFinished(QNetworkReply *networkReply);
-    void onTimeout()
-    {
-        //Every hour the system fetch the weather
-        fetchWeather();
-    }
+    void onTimeout();
 
 private:
     const QUrl m_url;

@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     Logger oLogger("application.log"); // Log to 'application.log' file
+    // Expose the object to QML context
     openMeteoAPI openMeteoApi;
 
     QQmlApplicationEngine engine;
@@ -20,7 +21,6 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
 
-    // Expose the object to QML context
     engine.rootContext()->setContextProperty("openMeteoApi", &openMeteoApi);
     engine.loadFromModule("RaspGui", "Main");
 

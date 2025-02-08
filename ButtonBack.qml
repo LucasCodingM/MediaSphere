@@ -4,7 +4,7 @@ import QtQuick.Controls
 Button {
     id: buttonBack
     width: 0.3 * parent.width
-    height: 0.17 * parent.height
+    height: 0.15 * parent.height
     property string textButtonBack: "MAIN MENU"
     property string sPathIcone: "back.png"
     background: Rectangle {
@@ -23,8 +23,8 @@ Button {
             anchors.left: parent.left
             anchors.leftMargin: 0.03 * parent.width
             anchors.verticalCenter: parent.verticalCenter
-            width: 0.3 * parent.width
-            height: width
+            width: height
+            height: 0.8 * parent.height
         }
 
         Text {

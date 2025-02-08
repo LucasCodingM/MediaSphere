@@ -4,8 +4,8 @@
 openMeteoAPI::openMeteoAPI(QObject *parent)
     : QObject{parent}
     , m_url("https://api.open-meteo.com/v1/"
-            "forecast?latitude=48.112&longitude=-1.6743&current=temperature_2m&daily=weather_code&"
-            "timezone=auto&forecast_days=3")
+            "forecast?latitude=48.112&longitude=-1.6743&current=temperature_2m,weather_code&daily="
+            "weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=3")
     , m_reply(nullptr)
     , m_bIsDataAvailable(false)
 {
@@ -19,22 +19,17 @@ openMeteoAPI::openMeteoAPI(QObject *parent)
             &QTimer::timeout,
             this,
             &openMeteoAPI::onTimeout); // Connect the timeout signal to the slot
-    timer->start(60000);               // Start the timer in ms interval (1h)
+    timer->start(60000);               // Start the timer in ms interval (1min)
 }
 
 void openMeteoAPI::serviceRequestFinished(QNetworkReply *networkReply)
 {
     m_reply = networkReply;
     if (m_reply->error() != QNetworkReply::NoError) {
-        //catching exception in slot is needed
-        try {
-            THROW_CUSTOM_EXCEPTION(m_reply->errorString());
-        } catch (const CustomException &e) {
-            qCritical() << e.what();
-        }
+        qCritical() << m_reply->errorString();
         return;
     }
-    qDebug() << "Receive https reply";
+    qDebug() << "Request received";
     // Parse the JSON response
     QByteArray response = m_reply->readAll();
     QJsonDocument doc = QJsonDocument::fromJson(response);
@@ -42,6 +37,17 @@ void openMeteoAPI::serviceRequestFinished(QNetworkReply *networkReply)
     m_reply->deleteLater();
     m_bIsDataAvailable = true;
     emit requestFinished();
+}
+
+void openMeteoAPI::onTimeout()
+{
+    static QDate lastCheckedDate = QDate::currentDate();
+    QDate currentDate = QDate::currentDate();
+    // If the date has changed
+    if (currentDate != lastCheckedDate) {
+        lastCheckedDate = currentDate;
+        fetchWeather();
+    }
 }
 
 void openMeteoAPI::fetchWeather()
@@ -61,20 +67,20 @@ bool openMeteoAPI::getIsDataAvailable()
     return m_bIsDataAvailable;
 }
 
-QJsonArray openMeteoAPI::getListDaysWeatherCode()
+QJsonObject openMeteoAPI::getListDailyWeatherData()
 {
     if (m_jsonInfoWeather.empty()) {
-        THROW_CUSTOM_EXCEPTION("weather code not available");
-        return QJsonArray();
+        qCritical() << "Daily weather data not available";
+        return QJsonObject();
     }
-    return m_jsonInfoWeather["weather_code"].toArray();
+    return m_jsonInfoWeather["daily"].toObject();
 }
 
-double openMeteoAPI::getTemperature()
+QJsonObject openMeteoAPI::getCurrentWeatherData()
 {
     if (m_jsonInfoWeather.empty()) {
-        THROW_CUSTOM_EXCEPTION("weather temperature not available");
-        return 0;
+        qCritical() << "Current weather data not available";
+        return QJsonObject();
     }
-    return m_jsonInfoWeather["current"].toObject()["temperature_2m"].toDouble();
+    return m_jsonInfoWeather["current"].toObject();
 }
