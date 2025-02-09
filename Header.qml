@@ -67,6 +67,12 @@ Rectangle {
             currentHeaderMenuIcone = weatherMenuIcone
             break
         }
+        case Enum.WindowName.VideoPlayer:
+        {
+            currentHeaderMenu = videoPlayerMenu
+            currentHeaderMenuIcone = videoPlayerMenuIcone
+            break
+        }
         default:
             console.warn("currentHeaderMenu not found")
             break
@@ -85,10 +91,11 @@ Rectangle {
     }
 
     Image {
+        id: iconePowerOff
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: 0.02 * parent.width
-        height: 0.8 * parent.height
+        height: 0.6 * parent.height
         width: height
         fillMode: Image.PreserveAspectFit
         source: ResourcesComponents.rootAssetsPath + "power.png"

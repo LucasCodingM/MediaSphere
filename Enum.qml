@@ -4,6 +4,7 @@ Item {
     id: enumItem
     enum WindowName {
         Menu,
-        Weather
+        Weather,
+        VideoPlayer
     }
 }

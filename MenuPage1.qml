@@ -1,5 +1,6 @@
 //import ResourcesComponents
 import QtQuick
+import "widgets"
 
 Item {
     width: 1024
@@ -16,7 +17,7 @@ Item {
         y: menuPage1.topPos
         width: 0.2 * parent.width
         height: 0.3 * parent.height
-        sPathIcone: "music"
+        sIconName: "music"
     }
     ButtonBlueGradient {
         id: buttonWeather
@@ -24,7 +25,7 @@ Item {
         y: menuPage1.topPos
         width: 0.2 * parent.width
         height: 0.3 * parent.height
-        sPathIcone: "weather"
+        sIconName: "weather"
         onClicked: ResourcesComponents.loadComponent(Enum.WindowName.Weather)
     }
     ButtonBlueGradient {
@@ -33,7 +34,9 @@ Item {
         y: menuPage1.bottomPos
         width: 0.2 * parent.width
         height: 0.3 * parent.height
-        sPathIcone: "movie"
+        sIconName: "movie"
+        onClicked: ResourcesComponents.loadComponent(
+                       Enum.WindowName.VideoPlayer)
     }
     ButtonBlueGradient {
         id: buttonGames
@@ -41,6 +44,6 @@ Item {
         y: menuPage1.bottomPos
         width: 0.2 * parent.width
         height: 0.3 * parent.height
-        sPathIcone: "games"
+        sIconName: "games"
     }
 }

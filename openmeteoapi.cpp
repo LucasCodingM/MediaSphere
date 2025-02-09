@@ -1,5 +1,4 @@
 #include "openmeteoapi.h"
-#include "customexception.h"
 
 openMeteoAPI::openMeteoAPI(QObject *parent)
     : QObject{parent}

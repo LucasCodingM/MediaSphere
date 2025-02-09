@@ -1,17 +1,20 @@
 import QtQuick
 import QtQuick.Controls
+import ".."
 
 //window resolution: 1024x600
 Button {
     id: buttonBlue
     width: 200
     height: 185
-    property string sPathIcone: ""
-    property real iconeWidth: width - 40
-    property real iconeHeight: height - 40
+    property real marginIcon: 0.2
+    property string sIconName: ""
+    property alias radius: bgnRec.radius
+    property real iconeWidth: width - marginIcon * width
+
     background: Rectangle {
         id: bgnRec
-        radius: 37
+        radius: 0.185 * buttonBlue.width
         visible: true
         opacity: enabled ? 1 : 0.3
         border.color: buttonBlue.down ? "white" : "transparent"
@@ -31,11 +34,10 @@ Button {
         }
         Image {
             id: icone
-            source: ResourcesComponents.rootAssetsPath + buttonBlue.sPathIcone
+            source: ResourcesComponents.rootAssetsPath + buttonBlue.sIconName
             fillMode: Image.PreserveAspectFit
             anchors.centerIn: parent
             width: buttonBlue.iconeWidth
-            height: buttonBlue.iconeHeight
         }
     }
 }

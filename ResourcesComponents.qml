@@ -32,6 +32,11 @@ Item {
             loader.sourceComponent = weatherComponent
             break
         }
+        case Enum.WindowName.VideoPlayer:
+        {
+            loader.sourceComponent = videoPlayerComponent
+            break
+        }
         default:
         {
             loader.sourceComponent = Item
@@ -48,5 +53,10 @@ Item {
     Component {
         id: menuComponent
         Menu {}
+    }
+
+    Component {
+        id: videoPlayerComponent
+        VideoPlayer {}
     }
 }

@@ -1,12 +1,13 @@
 import QtQuick
 import QtQuick.Controls
+import ".."
 
 Button {
     id: buttonBack
     width: 0.3 * parent.width
     height: 0.15 * parent.height
     property string textButtonBack: "MAIN MENU"
-    property string sPathIcone: "back.png"
+    property string sIconName: "back.png"
     background: Rectangle {
         id: bgnRec
 
@@ -18,7 +19,7 @@ Button {
 
         Image {
             id: icone
-            source: ResourcesComponents.rootAssetsPath + buttonBack.sPathIcone
+            source: ResourcesComponents.rootAssetsPath + buttonBack.sIconName
             fillMode: Image.PreserveAspectFit
             anchors.left: parent.left
             anchors.leftMargin: 0.03 * parent.width
