@@ -1,4 +1,5 @@
 import QtQuick
+import "../widgets"
 
 Item {
     width: 1024

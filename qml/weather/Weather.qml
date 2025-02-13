@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
-import "widgets"
+import "../../"
+import "../shared/widgets"
 
 Item {
     id: weather

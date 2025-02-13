@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-import ".."
+import "../../../"
 
 //window resolution: 1024x600
 Button {

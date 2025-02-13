@@ -1,6 +1,6 @@
-//import ResourcesComponents
+import "../../../"
 import QtQuick
-import "widgets"
+import "../widgets"
 
 Item {
     width: 1024

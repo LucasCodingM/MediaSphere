@@ -1,4 +1,6 @@
 import QtQuick
+import "widgets"
+import "../.."
 
 Window {
     id: mainWindow

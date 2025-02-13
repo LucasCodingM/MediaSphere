@@ -1,9 +1,10 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include "customexception.h"
-#include "logger.h"
-#include "openmeteoapi.h"
+#include "shared/customexception.h"
+#include "shared/logger/logger.h"
+#include "videoPlayer/videoplayer.h"
+#include "weather/openmeteoapi.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,8 +22,10 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
 
+    qmlRegisterType<videoPlayer>("VideoPlayerModule", 1, 0, "VideoPlayer");
     engine.rootContext()->setContextProperty("openMeteoApi", &openMeteoApi);
     engine.loadFromModule("RaspGui", "Main");
+    // Register the VideoPlayer class to QML
 
     try {
         openMeteoApi.fetchWeather();

@@ -1,6 +1,9 @@
 pragma Singleton
 
 import QtQuick
+import "qml/weather"
+import "qml/shared/menu"
+import "qml/videoPlayer"
 
 Item {
     id: resourcesComponents
