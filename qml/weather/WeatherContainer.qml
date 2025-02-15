@@ -12,6 +12,7 @@ Rectangle {
     property string sTemperatureMax: "-"
     property string sTemperatureMin: "-"
     property int iWeatherCode: -1
+    property bool isNight: false
 
     // Code	Description
     // 0	Clear sky
@@ -31,6 +32,7 @@ Rectangle {
     property list<int> listWeatherCloudy: [45, 48, 51, 53, 55, 56, 57, 80, 81, 82]
     property list<int> listWeatherRain: [61, 63, 65, 66, 67]
     property list<int> listWeatherSnow: [71, 73, 75, 77, 85, 86]
+    property list<int> listWeatherStorm: [95, 96, 99]
 
     function getDayOfWeek() {
         if (iDayOfWeek == 0)
@@ -46,15 +48,19 @@ Rectangle {
 
     function selectWeatherIcone() {
         if (iWeatherCode === 0)
-            return ResourcesComponents.rootAssetsPath + "weatherSun.png"
+            return ResourcesComponents.rootAssetsPath
+                    + (isNight ? "weatherMoon.png" : "weatherSun.png")
         if (listWeatherOvercast.includes(iWeatherCode))
-            return ResourcesComponents.rootAssetsPath + "weatherOvercast.png"
+            return ResourcesComponents.rootAssetsPath
+                    + (isNight ? "weatherOvercastNight.png" : "weatherOvercast.png")
         if (listWeatherCloudy.includes(iWeatherCode))
             return ResourcesComponents.rootAssetsPath + "weatherCloudy.png"
         if (listWeatherRain.includes(iWeatherCode))
             return ResourcesComponents.rootAssetsPath + "weatherRain.png"
         if (listWeatherSnow.includes(iWeatherCode))
             return ResourcesComponents.rootAssetsPath + "weatherSnow.png"
+        if (listWeatherStorm.includes(iWeatherCode))
+            return ResourcesComponents.rootAssetsPath + "weatherWind.png"
         return ""
     }
 
@@ -85,7 +91,7 @@ Rectangle {
         id: iconThermostat
         visible: weatherContainer.itemTemperatureMinMaxVisible
         anchors.left: parent.left
-        anchors.leftMargin: 0.005 * parent.width
+        anchors.leftMargin: 0.05 * parent.width
         anchors.top: parent.top
         anchors.topMargin: 0.2 * parent.height
         source: ResourcesComponents.rootAssetsPath + "degrees.png"
@@ -96,7 +102,7 @@ Rectangle {
     Text {
         id: textTemperatureMin
         visible: weatherContainer.itemTemperatureMinMaxVisible
-        anchors.left: iconThermostat.right
+        anchors.left: textTemperatureMax.left
         anchors.bottom: iconThermostat.bottom
         color: "white"
         font.capitalization: Font.AllUppercase
@@ -108,6 +114,7 @@ Rectangle {
         id: textTemperatureMax
         visible: weatherContainer.itemTemperatureMinMaxVisible
         anchors.left: iconThermostat.right
+        anchors.leftMargin: 0.076 * parent.width
         anchors.top: iconThermostat.top
         color: "white"
         font.capitalization: Font.AllUppercase

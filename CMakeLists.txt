@@ -67,6 +67,10 @@ set(RESOURCES
    assets/weatherRain.png
    assets/weatherSnow.png
    assets/weatherSun.png
+   assets/weatherMoon.png
+   assets/weatherOvercastNight.png
+   assets/weatherWind.png
+   assets/weatherWindSun.png
 )
 
 set(SOURCES_WEATHER

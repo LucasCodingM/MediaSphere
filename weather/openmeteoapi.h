@@ -23,7 +23,7 @@ public:
     Q_INVOKABLE bool getIsDataAvailable();
     Q_INVOKABLE QJsonObject getListDailyWeatherData();
     Q_INVOKABLE QJsonObject getCurrentWeatherData();
-    void initUrlInfoWeatherParameter();
+    void initUrlInfoWeatherParameter(const QJsonDocument &jsonDoc);
     void addLocationInMapUrlQueryItem(QString latitude, QString longitude);
     void makeRequest(const QUrl &qUrl, const QString &requestId);
     void fillUrlInfoWeatherQueryItem();
@@ -44,8 +44,6 @@ private:
     QNetworkAccessManager *m_networkManager;
     // Data about the weather in json format fetched on api.open-meteo.com
     QJsonObject m_jsonInfoWeather;
-    //!Store the data in json format about your localisation -> only used for the weather api
-    QJsonObject m_jsonInfoIp;
     // Boolean about the data avaibility's state. The data is false during an update period or when the data weather
     // has not been successfully fetched
     bool m_bIsDataAvailable;

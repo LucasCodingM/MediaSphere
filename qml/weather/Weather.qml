@@ -40,6 +40,7 @@ Item {
                     )["temperature_2m"]
         todayWeather.iWeatherCode = openMeteoApi.getCurrentWeatherData(
                     )["weather_code"]
+        todayWeather.isNight = !openMeteoApi.getCurrentWeatherData()["is_day"]
     }
 
     function updateTmrWeather() {

@@ -10,12 +10,11 @@ openMeteoAPI::openMeteoAPI(QObject *parent)
     , m_mapUrlQueryItem(
           QMap<QString, QString>({{"latitude", "48.112"},
                                   {"longitude", "-1.6743"},
-                                  {"current", "temperature_2m,weather_code"},
+                                  {"current", "temperature_2m,weather_code,is_day"},
                                   {"daily", "weather_code,temperature_2m_max,temperature_2m_min"},
                                   {"timezone", "auto"},
                                   {"forecast_days", "3"}}))
     , m_jsonInfoWeather(QJsonObject())
-    , m_jsonInfoIp(QJsonObject())
     , m_bIsDataAvailable(false)
 {
     m_networkManager = new QNetworkAccessManager(this);
@@ -55,9 +54,8 @@ void openMeteoAPI::updateDataFromRequest(QNetworkReply *networkReply)
         emit requestFinished();
     } else if (requestId == "infoIp") {
         qDebug() << "infoIp received";
-        m_jsonInfoIp = doc.object();
         // Init the urlInfoWeather with location parameter and others if needed
-        initUrlInfoWeatherParameter();
+        initUrlInfoWeatherParameter(doc);
         // Finally get the info weather
         makeRequest(m_urlInfoWeather, "infoWeather");
     } else
@@ -141,10 +139,10 @@ void openMeteoAPI::fillUrlInfoWeatherQueryItem()
     m_urlInfoWeather.setQuery(query);
 }
 
-void openMeteoAPI::initUrlInfoWeatherParameter()
+void openMeteoAPI::initUrlInfoWeatherParameter(const QJsonDocument &jsonDoc)
 {
     // Split the string to get the latitude and longitude coordinates;
-    QList<QString> sLocation = m_jsonInfoIp["loc"].toString().split(',');
+    QList<QString> sLocation = jsonDoc["loc"].toString().split(',');
     addLocationInMapUrlQueryItem(sLocation.at(0), sLocation.at(1));
     fillUrlInfoWeatherQueryItem();
 }
