@@ -1,11 +1,21 @@
 #include "openmeteoapi.h"
 
+#include <QThread>
+#include <QUrlQuery>
+
 openMeteoAPI::openMeteoAPI(QObject *parent)
     : QObject{parent}
-    , m_url("https://api.open-meteo.com/v1/"
-            "forecast?latitude=48.112&longitude=-1.6743&current=temperature_2m,weather_code&daily="
-            "weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=3")
-    , m_reply(nullptr)
+    , m_urlInfoWeather("https://api.open-meteo.com/v1/forecast")
+    , m_urlInfoIp("https://ipinfo.io/json")
+    , m_mapUrlQueryItem(
+          QMap<QString, QString>({{"latitude", "48.112"},
+                                  {"longitude", "-1.6743"},
+                                  {"current", "temperature_2m,weather_code"},
+                                  {"daily", "weather_code,temperature_2m_max,temperature_2m_min"},
+                                  {"timezone", "auto"},
+                                  {"forecast_days", "3"}}))
+    , m_jsonInfoWeather(QJsonObject())
+    , m_jsonInfoIp(QJsonObject())
     , m_bIsDataAvailable(false)
 {
     m_networkManager = new QNetworkAccessManager(this);
@@ -23,19 +33,44 @@ openMeteoAPI::openMeteoAPI(QObject *parent)
 
 void openMeteoAPI::serviceRequestFinished(QNetworkReply *networkReply)
 {
-    m_reply = networkReply;
-    if (m_reply->error() != QNetworkReply::NoError) {
-        qCritical() << m_reply->errorString();
+    if (networkReply->error() != QNetworkReply::NoError) {
+        qCritical() << networkReply->errorString();
         return;
     }
-    qDebug() << "Request received";
+    updateDataFromRequest(networkReply);
+    networkReply->deleteLater();
+}
+
+void openMeteoAPI::updateDataFromRequest(QNetworkReply *networkReply)
+{
     // Parse the JSON response
-    QByteArray response = m_reply->readAll();
+    QByteArray response = networkReply->readAll();
     QJsonDocument doc = QJsonDocument::fromJson(response);
-    m_jsonInfoWeather = doc.object();
-    m_reply->deleteLater();
-    m_bIsDataAvailable = true;
-    emit requestFinished();
+    // Retrieve the custom attribute (requestId) from the request
+    QString requestId = networkReply->request().attribute(QNetworkRequest::User).toString();
+    if (requestId == "infoWeather") {
+        qDebug() << "infoWeather received";
+        m_jsonInfoWeather = doc.object();
+        m_bIsDataAvailable = true;
+        emit requestFinished();
+    } else if (requestId == "infoIp") {
+        qDebug() << "infoIp received";
+        m_jsonInfoIp = doc.object();
+        // Init the urlInfoWeather with location parameter and others if needed
+        initUrlInfoWeatherParameter();
+        // Finally get the info weather
+        makeRequest(m_urlInfoWeather, "infoWeather");
+    } else
+        qCritical() << "Request received but requestId unknown";
+}
+
+void openMeteoAPI::makeRequest(const QUrl &qUrl, const QString &requestId)
+{
+    // Set a custom property (identifier) for the request
+    QNetworkRequest request(qUrl);
+    request.setAttribute(QNetworkRequest::User, requestId);
+    // Send the request
+    m_networkManager->get(QNetworkRequest(request));
 }
 
 void openMeteoAPI::onTimeout()
@@ -52,11 +87,13 @@ void openMeteoAPI::onTimeout()
 void openMeteoAPI::fetchWeather()
 {
     m_bIsDataAvailable = false;
-    clearJsonData();
-    m_networkManager->get(QNetworkRequest(m_url));
+    clearJsonDataWeather();
+    // First get the location
+    // Then when serviceRequestFinished received the signal the weather will be fetched
+    makeRequest(m_urlInfoIp, "infoIp");
 }
 
-void openMeteoAPI::clearJsonData()
+void openMeteoAPI::clearJsonDataWeather()
 {
     m_jsonInfoWeather = QJsonObject();
 }
@@ -82,4 +119,32 @@ QJsonObject openMeteoAPI::getCurrentWeatherData()
         return QJsonObject();
     }
     return m_jsonInfoWeather["current"].toObject();
+}
+
+void openMeteoAPI::addLocationInMapUrlQueryItem(QString latitude, QString longitude)
+{
+    if (!m_mapUrlQueryItem.empty()) {
+        m_mapUrlQueryItem["latitude"] = latitude;
+        m_mapUrlQueryItem["longitude"] = longitude;
+    }
+}
+
+void openMeteoAPI::fillUrlInfoWeatherQueryItem()
+{
+    // Create a QUrlQuery object
+    QUrlQuery query;
+    QMapIterator<QString, QString> it(m_mapUrlQueryItem);
+    while (it.hasNext()) {
+        it.next();
+        query.addQueryItem(it.key(), it.value());
+    }
+    m_urlInfoWeather.setQuery(query);
+}
+
+void openMeteoAPI::initUrlInfoWeatherParameter()
+{
+    // Split the string to get the latitude and longitude coordinates;
+    QList<QString> sLocation = m_jsonInfoIp["loc"].toString().split(',');
+    addLocationInMapUrlQueryItem(sLocation.at(0), sLocation.at(1));
+    fillUrlInfoWeatherQueryItem();
 }

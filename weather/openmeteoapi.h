@@ -18,11 +18,16 @@ class openMeteoAPI : public QObject
 public:
     explicit openMeteoAPI(QObject *parent = nullptr);
 
-    void clearJsonData();
+    void clearJsonDataWeather();
     Q_INVOKABLE void fetchWeather();
     Q_INVOKABLE bool getIsDataAvailable();
     Q_INVOKABLE QJsonObject getListDailyWeatherData();
     Q_INVOKABLE QJsonObject getCurrentWeatherData();
+    void initUrlInfoWeatherParameter();
+    void addLocationInMapUrlQueryItem(QString latitude, QString longitude);
+    void makeRequest(const QUrl &qUrl, const QString &requestId);
+    void fillUrlInfoWeatherQueryItem();
+    void updateDataFromRequest(QNetworkReply *networkReply);
 signals:
     void requestFinished();
 public slots:
@@ -30,10 +35,19 @@ public slots:
     void onTimeout();
 
 private:
-    const QUrl m_url;
-    QNetworkReply *m_reply;
+    // Contains the url request
+    QUrl m_urlInfoWeather;
+    // Contains the url request for ip info (mainly for localisation)
+    const QUrl m_urlInfoIp;
+    QMap<QString, QString> m_mapUrlQueryItem;
+    // Manage the http request
     QNetworkAccessManager *m_networkManager;
+    // Data about the weather in json format fetched on api.open-meteo.com
     QJsonObject m_jsonInfoWeather;
+    //!Store the data in json format about your localisation -> only used for the weather api
+    QJsonObject m_jsonInfoIp;
+    // Boolean about the data avaibility's state. The data is false during an update period or when the data weather
+    // has not been successfully fetched
     bool m_bIsDataAvailable;
 signals:
 };
