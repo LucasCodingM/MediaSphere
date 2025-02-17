@@ -1,97 +1,50 @@
 #include "videoplayer.h"
 
-videoPlayer::videoPlayer(QObject *parent)
-    : QObject{parent}
-    , m_mediaPlayer(new QMediaPlayer(this))
-    , m_audioOutput(new QAudioOutput(this))
-    , m_isPlaying(false)
-    , m_isPaused(false)
-    , m_isStopped(false)
+VideoPlayer::VideoPlayer(QObject *parent)
+    : QMediaPlayer{parent}
 {
-    m_mediaPlayer->setAudioOutput(m_audioOutput);
-    connect(m_mediaPlayer,
-            &QMediaPlayer::playbackStateChanged,
-            this,
-            [this](QMediaPlayer::PlaybackState newState) {
-                m_isPlaying = false;
-                m_isPaused = false;
-                m_isStopped = false;
-                if (newState == QMediaPlayer::PlaybackState::PlayingState)
-                    m_isPlaying = true;
-                else if (newState == QMediaPlayer::PlaybackState::PausedState)
-                    m_isPaused = true;
-                else if (newState == QMediaPlayer::PlaybackState::StoppedState)
-                    m_isStopped = true;
-                emit isPlayingChanged();
-                emit isPausedChanged();
-                emit isStoppedChanged();
-            });
+    // Connect the sourceChanged signal to a custom slot
+    connect(this, &QMediaPlayer::sourceChanged, this, &VideoPlayer::onSourceChanged);
+    setupSource();
 }
 
-void videoPlayer::setVideoOutput(QObject *objVideoOutput)
+void VideoPlayer::setupSource()
 {
-    m_mediaPlayer->setVideoOutput(objVideoOutput);
+    QUrl url;
+    if (!m_settings.value("recentVideosCollections").toStringList().empty())
+        url = m_settings.value("recentVideosCollections").toStringList().last();
+    this->setSource(url);
 }
 
-QObject *videoPlayer::videoOutput()
+void VideoPlayer::appendVideoPath(const QString &newPath)
 {
-    return m_mediaPlayer->videoOutput();
-}
+    // Load the current list of video paths from QSettings
+    QStringList videoPaths = m_settings.value("recentVideosCollections").toStringList();
 
-QString videoPlayer::videoUrl() const
-{
-    return m_videoUrl;
-}
-
-void videoPlayer::setVideoUrl(const QString &url)
-{
-    if (m_videoUrl != url) {
-        m_videoUrl = url;
-        emit videoUrlChanged();
-        m_mediaPlayer->setSource(QUrl::fromLocalFile(m_videoUrl));
+    // Append the new path to the list (if it's not already in the list)
+    if (!videoPaths.contains(newPath)) {
+        videoPaths.append(newPath);
     }
+
+    // Save the updated list back to QSettings
+    m_settings.setValue("recentVideosCollections", videoPaths);
+
+    // For debugging purposes, print the updated list
+    qDebug() << "Updated video paths:" << videoPaths;
 }
 
-bool videoPlayer::isPlaying() const
+void VideoPlayer::clearVideosCollections()
 {
-    return m_isPlaying;
+    m_settings.value("recentVideosCollections").clear();
 }
 
-bool videoPlayer::isPaused() const
+void VideoPlayer::replay()
 {
-    return m_isPaused;
+    this->setPosition(0);
+    this->play();
 }
 
-bool videoPlayer::isStopped() const
+void VideoPlayer::onSourceChanged(const QUrl &newSource)
 {
-    return m_isStopped;
-}
-
-void videoPlayer::play()
-{
-    if (m_mediaPlayer->playbackState() != QMediaPlayer::PlayingState) {
-        m_mediaPlayer->play();
-    }
-}
-
-void videoPlayer::pause()
-{
-    if (m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState) {
-        m_mediaPlayer->pause();
-    }
-}
-
-void videoPlayer::stop()
-{
-    m_mediaPlayer->stop();
-}
-
-void videoPlayer::setVolume(float volume)
-{
-    m_audioOutput->setVolume(volume);
-}
-
-void videoPlayer::setMute(bool mute)
-{
-    m_audioOutput->setMuted(mute);
+    appendVideoPath(newSource.toString());
 }

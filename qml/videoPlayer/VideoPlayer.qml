@@ -2,8 +2,9 @@ import QtCore
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
+import QtQuick.Controls.Basic
 import QtMultimedia
-import VideoPlayerModule 1.0
+import VideoPlayerModule
 import "../shared/widgets"
 import "../../"
 
@@ -11,12 +12,7 @@ Item {
     id: videoPlayer
     anchors.fill: parent
 
-    ButtonBack {
-        id: buttonBack
-        x: 0.05 * parent.width
-        y: 0.12 * parent.height
-        onClicked: ResourcesComponents.loadComponent(Enum.WindowName.Menu)
-    }
+    property bool isVideoVisible: false
 
     ButtonRoundBlueGradient {
         anchors.right: parent.right
@@ -30,24 +26,51 @@ Item {
         id: fileDialog
         currentFolder: StandardPaths.standardLocations(
                            StandardPaths.MoviesLocation)[0]
-        onAccepted: player.videoUrl = selectedFile
+        onAccepted: player.source = selectedFile
+    }
+
+    Button {
+        anchors.centerIn: parent
+        width: 50
+        height: 50
+        onClicked: player.play()
     }
 
     //Display a black background when the video is playing
     Rectangle {
+        id: bgn
         anchors.fill: parent
         MouseArea {
             anchors.fill: parent
         }
         color: "black"
-        visible: player.isPlaying || player.isPaused
+        visible: videoPlayer.isVideoVisible
     }
 
     // Create VideoPlayer object from C++ class
     VideoPlayer {
         id: player
-        videoUrl: "file:///home/lucas/Vidéos/chats.mp4" // Path to your video file
         videoOutput: videoOutput
+        onPlaybackStateChanged: {
+            if (playbackState == MediaPlayer.PlayingState) {
+                isVideoVisible = true
+                controlMedia.buttonPausePlay.isPlaying = true
+            } else if (playbackState == MediaPlayer.PausedState) {
+                isVideoVisible = true
+                controlMedia.buttonPausePlay.isPlaying = false
+            } else {
+                isVideoVisible = false
+                controlMedia.buttonPausePlay.isPlaying = false
+            }
+        }
+        onPositionChanged: {
+            controlMedia.mediaProgression.value = player.position / player.duration
+        }
+
+        audioOutput: AudioOutput {
+            volume: controlMedia.volumeSlider.value
+            muted: controlMedia.buttonAudio.checked
+        }
     }
 
     // Video display area
@@ -56,42 +79,66 @@ Item {
         anchors.fill: parent
     }
 
+    ButtonBack {
+        id: buttonBack
+        x: 0.05 * parent.width
+        y: 0.12 * parent.height
+
+        onClicked: ResourcesComponents.loadComponent(Enum.WindowName.Menu)
+        visible: !videoPlayer.isVideoVisible
+    }
+
     // Control buttons
-    Rectangle {
+    ControlMedia {
+        id: controlMedia
+        mediaPlayer: player
+        opacity: 0
+        visible: videoPlayer.isVideoVisible
+    }
+
+    property var jsonModel: ({
+                                 "name": "Sammy",
+                                 "email": "sammy@example.com",
+                                 "plan": "Pro"
+                             })
+
+    ListView {
         width: parent.width
-        height: 100
-        anchors.bottom: parent.bottom
-        color: "#00000080"
-
-        Row {
-            anchors.centerIn: parent
-
-            Button {
-                text: "Play"
-                onClicked: player.play()
+        height: parent.height
+        model: ListModel {
+            ListElement {
+                row: 0
             }
-
-            Button {
-                text: "Pause"
-                onClicked: player.pause()
+            ListElement {
+                row: 1
             }
-
-            Button {
-                text: "Stop"
-                onClicked: player.stop()
+            ListElement {
+                row: 2
             }
+        }
 
-            Slider {
-                id: volumeSlider
-                from: 0
-                to: 100
-                value: 50
-                onValueChanged: player.setVolume(value)
-            }
+        delegate: Item {
+            width: parent.width
+            height: 200
 
-            Switch {
-                text: "Mute"
-                onCheckedChanged: player.setMute(checked)
+            GridView {
+                anchors.fill: parent
+                cellWidth: 100
+                cellHeight: 100
+                model: jsonModel
+
+                delegate: Rectangle {
+                    width: 100
+                    height: 100
+                    color: "lightblue"
+                    border.color: "black"
+                    radius: 10
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: model.name
+                    }
+                }
             }
         }
     }

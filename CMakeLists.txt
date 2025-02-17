@@ -29,6 +29,13 @@ set(QML_FILES
     qml/videoPlayer/VideoPlayer.qml
     qml/weather/Weather.qml
     qml/weather/WeatherContainer.qml
+    qml/shared/widgets/ButtonReplay.qml
+    qml/shared/widgets/ButtonPausePlay.qml
+    qml/shared/widgets/ButtonAccelerate.qml
+    qml/shared/widgets/ButtonAudio.qml
+    qml/shared/widgets/ButtonTransparent.qml
+    qml/shared/widgets/ControlMedia.qml
+    qml/shared/widgets/ButtonStop.qml
 )
 
 set(RESOURCES
@@ -71,6 +78,8 @@ set(RESOURCES
    assets/weatherOvercastNight.png
    assets/weatherWind.png
    assets/weatherWindSun.png
+   assets/mute.png
+   assets/stop.png
 )
 
 set(SOURCES_WEATHER
@@ -114,7 +123,6 @@ qt_add_qml_module(appRaspGui
         ${SOURCES_WEATHER}
         ${SOURCES_VIDEO_PLAYER}
         ${SOURCES_SHARED}
-
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

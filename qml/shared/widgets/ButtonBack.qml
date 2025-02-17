@@ -8,6 +8,7 @@ Button {
     height: 0.15 * parent.height
     property string textButtonBack: "MAIN MENU"
     property string sIconName: "back.png"
+
     background: Rectangle {
         id: bgnRec
 
