@@ -96,50 +96,44 @@ Item {
         visible: videoPlayer.isVideoVisible
     }
 
-    property var jsonModel: ({
-                                 "name": "Sammy",
-                                 "email": "sammy@example.com",
-                                 "plan": "Pro"
-                             })
+    // ListView {
+    //     width: parent.width
+    //     height: parent.height
+    //     model: ListModel {
+    //         ListElement {
+    //             row: 0
+    //         }
+    //         ListElement {
+    //             row: 1
+    //         }
+    //         ListElement {
+    //             row: 2
+    //         }
+    //     }
 
-    ListView {
-        width: parent.width
-        height: parent.height
-        model: ListModel {
-            ListElement {
-                row: 0
-            }
-            ListElement {
-                row: 1
-            }
-            ListElement {
-                row: 2
-            }
-        }
+    //     delegate: Item {
+    //         width: parent.width
+    //         height: 200
 
-        delegate: Item {
-            width: parent.width
-            height: 200
+    //         GridView {
+    //             anchors.fill: parent
+    //             cellWidth: 100
+    //             cellHeight: 100
+    //             model: jsonModel
 
-            GridView {
-                anchors.fill: parent
-                cellWidth: 100
-                cellHeight: 100
-                model: jsonModel
+    //             delegate: Rectangle {
+    //                 width: 100
+    //                 height: 100
+    //                 color: "lightblue"
+    //                 border.color: "black"
+    //                 radius: 10
 
-                delegate: Rectangle {
-                    width: 100
-                    height: 100
-                    color: "lightblue"
-                    border.color: "black"
-                    radius: 10
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: model.name
-                    }
-                }
-            }
-        }
-    }
+    //                 Text {
+    //                     anchors.centerIn: parent
+    //                     text: model.name
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }
