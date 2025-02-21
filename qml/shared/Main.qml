@@ -6,7 +6,7 @@ Window {
     id: mainWindow
     minimumWidth: 1024
     minimumHeight: 600
-    //visibility: Window.FullScreen
+    visibility: ResourcesComponents.getWindowVisibility()
     visible: true
     title: qsTr("RaspGui")
 

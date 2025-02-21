@@ -33,7 +33,10 @@ Item {
         anchors.centerIn: parent
         width: 50
         height: 50
-        onClicked: player.play()
+        onClicked: {
+            player.play()
+            ResourcesComponents.setWindowVisibility(Window.FullScreen)
+        }
     }
 
     //Display a black background when the video is playing
@@ -42,6 +45,7 @@ Item {
         anchors.fill: parent
         MouseArea {
             anchors.fill: parent
+            onClicked: controlMedia.enabled = !controlMedia.enabled
         }
         color: "black"
         visible: videoPlayer.isVideoVisible
@@ -92,7 +96,7 @@ Item {
     ControlMedia {
         id: controlMedia
         mediaPlayer: player
-        opacity: 0
+        enabled: false
         visible: videoPlayer.isVideoVisible
     }
 

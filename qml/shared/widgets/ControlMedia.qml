@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
+import "../../../"
 
 Rectangle {
     id: controlMediaButtons
@@ -8,6 +9,7 @@ Rectangle {
     anchors.bottom: parent.bottom
     anchors.horizontalCenter: parent.horizontalCenter
     color: "transparent"
+    opacity: enabled ? 1 : 0
 
     property Item mediaPlayer
     property alias mediaProgression: mediaProgression
@@ -22,9 +24,9 @@ Rectangle {
         propagateComposedEvents: true
         onHoveredChanged: {
             if (mouseArea.containsMouse) {
-                controlMediaButtons.opacity = 1
+                controlMediaButtons.enabled = 1
             } else {
-                controlMediaButtons.opacity = 0
+                controlMediaButtons.enabled = 0
             }
         }
     }
@@ -151,7 +153,11 @@ Rectangle {
                 height: width
                 hoverEnabled: false
                 anchors.verticalCenter: parent.verticalCenter
-                onClicked: controlMediaButtons.mediaPlayer.stop()
+                onClicked: {
+                    controlMediaButtons.mediaPlayer.stop()
+                    ResourcesComponents.setWindowVisibility(
+                                Window.AutomaticVisibility)
+                }
             }
 
             ButtonAudio {

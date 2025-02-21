@@ -14,6 +14,16 @@ Item {
 
     property int currentWindowName: -1
 
+    property int windowVisibility: Window.AutomaticVisibility
+
+    function getWindowVisibility() {
+        return windowVisibility
+    }
+
+    function setWindowVisibility(enumWindowVisibility) {
+        windowVisibility = enumWindowVisibility
+    }
+
     function getLoader() {
         return loader
     }
