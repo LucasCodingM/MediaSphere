@@ -3,13 +3,29 @@
 VideoPlayer::VideoPlayer(QObject *parent)
     : QMediaPlayer{parent}
     , m_videoThumbNailExtractor(parent)
+    , m_videoSelectionModel(new VideoSelectionModel())
+    , m_videoWorker(m_settings, m_videoSelectionModel, m_videoThumbNailExtractor, parent)
 {
-    // Connect the sourceChanged signal to a custom slot
+    m_workerThread = new QThread();
+    // Move the worker to the thread
+    m_videoWorker.moveToThread(m_workerThread);
+
+    // Connect signals and slots
+    connect(m_workerThread, &QThread::started, this, [this]() {
+        // Start the append operation
+        m_videoWorker.updateDataSelectionModelAsync();
+    });
+
+    connect(&m_videoWorker,
+            &VideoWorker::fetchingDataReady,
+            this,
+            &VideoPlayer::onFetchingDataReady);
+
     //clearVideosCollections();
-    connect(this, &QMediaPlayer::sourceChanged, this, &VideoPlayer::onSourceChanged);
+    // Update media source on the last watched video
     setupSource();
-    m_videoSelectionModel = new VideoSelectionModel();
-    updateDataSelectionModel();
+    // Start the worker thread
+    m_workerThread->start();
 }
 
 void VideoPlayer::setupSource()
@@ -21,17 +37,6 @@ void VideoPlayer::setupSource()
         this->setSource(url);
 }
 
-void VideoPlayer::updateDataSelectionModel()
-{
-    foreach (QString videoPaths, getVideosCollections()) {
-        const QUrl urlVideoPaths(videoPaths);
-        if (!m_videoSelectionModel->getUrlVideoList().contains(urlVideoPaths)) {
-            QImage thumbnail = getThumbnailVideoFromUrl(urlVideoPaths);
-            m_videoSelectionModel->addData(urlVideoPaths, thumbnail);
-        }
-    }
-}
-
 QImage VideoPlayer::getThumbnailVideoFromUrl(const QUrl &videoPaths)
 {
     return m_videoThumbNailExtractor.getVideoThumbnail(videoPaths, 200);
@@ -39,21 +44,7 @@ QImage VideoPlayer::getThumbnailVideoFromUrl(const QUrl &videoPaths)
 
 void VideoPlayer::appendVideoPath(const QString &newPath)
 {
-    // Load the current list of video paths from QSettings
-    QStringList videoPaths = getVideosCollections();
-
-    // Append the new path to the list (if it's not already in the list)
-    if (!videoPaths.contains(newPath)) {
-        videoPaths.append(newPath);
-    }
-
-    // Save the updated list back to QSettings
-    m_settings.setValue("recentVideosCollections", videoPaths);
-
-    updateDataSelectionModel();
-
-    // For debugging purposes, print the updated list
-    qDebug() << "Updated video paths:" << videoPaths;
+    m_videoWorker.appendVideoPathAsync(newPath);
 }
 
 void VideoPlayer::clearVideosCollections()
@@ -77,7 +68,7 @@ VideoSelectionModel *VideoPlayer::getVideoSelectionModel()
     return m_videoSelectionModel;
 }
 
-void VideoPlayer::onSourceChanged(const QUrl &newSource)
+void VideoPlayer::onFetchingDataReady(const QUrl &urlVideo, QImage &thumbnail)
 {
-
+    m_videoSelectionModel->addData(urlVideo, thumbnail);
 }

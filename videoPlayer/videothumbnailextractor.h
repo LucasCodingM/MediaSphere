@@ -16,15 +16,24 @@ class VideoThumbNailExtractor : public QObject
 public:
     explicit VideoThumbNailExtractor(QObject *parent = nullptr);
 
+    ~VideoThumbNailExtractor()
+    {
+        if (m_loop.isRunning()) {
+            m_loop.quit();
+        }
+    }
+
     QImage getVideoThumbnail(const QUrl &videoUrl, int timeInMilliseconds = 1000);
 
 private slots:
     void onVideoFrameChanged(const QVideoFrame &frame);
+    void onPositionChanged(qint64 position);
 
 private:
     QMediaPlayer *m_player;
     QVideoSink *m_videoSink;
     QImage m_thumbnail;
+    QEventLoop m_loop;
     int m_timeInMs;
 };
 

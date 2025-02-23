@@ -9,6 +9,7 @@
 #include <QUrl>
 #include "videoselectionmodel.h"
 #include "videothumbnailextractor.h"
+#include "videoworker.h"
 
 class VideoPlayer : public QMediaPlayer
 {
@@ -16,6 +17,15 @@ class VideoPlayer : public QMediaPlayer
 
 public:
     explicit VideoPlayer(QObject *parent = nullptr);
+
+    ~VideoPlayer()
+    {
+        // Clean up
+        m_workerThread->quit();
+        m_workerThread->wait();
+        delete m_workerThread;
+    }
+
     Q_INVOKABLE void appendVideoPath(const QString &newPath);
     void clearVideosCollections();
     QStringList getVideosCollections() const;
@@ -24,11 +34,12 @@ public:
 
 protected:
     void setupSource();
-    void updateDataSelectionModel();
     QImage getThumbnailVideoFromUrl(const QUrl &videoPaths);
 private slots:
     // Custom slot to handle the sourceChanged signal
-    void onSourceChanged(const QUrl &newSource);
+    void onFetchingDataReady(
+        const QUrl &urlVideo,
+        QImage &thumbnail); // Slot when the data is ready to be updated in the model
 
 private:
     QSettings m_settings;
@@ -36,6 +47,9 @@ private:
     VideoSelectionModel *m_videoSelectionModel;
 
     VideoThumbNailExtractor m_videoThumbNailExtractor;
+
+    VideoWorker m_videoWorker;
+    QThread *m_workerThread;
 };
 
 #endif // VIDEOPLAYER_H

@@ -13,6 +13,10 @@ VideoThumbNailExtractor::VideoThumbNailExtractor(QObject *parent)
             &QVideoSink::videoFrameChanged,
             this,
             &VideoThumbNailExtractor::onVideoFrameChanged);
+    connect(m_player,
+            &QMediaPlayer::positionChanged,
+            this,
+            &VideoThumbNailExtractor::onPositionChanged);
 }
 
 QImage VideoThumbNailExtractor::getVideoThumbnail(const QUrl &videoUrl, int timeInMilliseconds)
@@ -21,22 +25,10 @@ QImage VideoThumbNailExtractor::getVideoThumbnail(const QUrl &videoUrl, int time
     // Set the video file and play the media
     m_player->setSource(videoUrl);
 
-    // Set the position to capture the thumbnail at the given time (e.g., 1000 ms)
     m_player->play();
     m_player->setPosition(timeInMilliseconds); // Set to capture the thumbnail at 1 second (1000 ms)
 
-    // Wait for the video frame to be captured
-    QEventLoop loop;
-    connect(m_player, &QMediaPlayer::positionChanged, this, [this, &loop, timeInMilliseconds]() {
-        if (m_player->position() >= timeInMilliseconds) {
-            // Stop the player once we reach the desired position
-            m_player->stop();
-
-            // Exit the event loop
-            loop.quit();
-        }
-    });
-    loop.exec(); // This blocks until the frame is captured
+    m_loop.exec(); // This blocks until the frame is captured
 
     // Return the captured thumbnail image
     return m_thumbnail;
@@ -49,5 +41,13 @@ void VideoThumbNailExtractor::onVideoFrameChanged(const QVideoFrame &frame)
         // Convert the frame to QImage
         m_thumbnail = frame.toImage();
         return;
+    }
+}
+
+void VideoThumbNailExtractor::onPositionChanged(qint64 position)
+{
+    if (position >= m_timeInMs) {
+        m_player->stop();
+        m_loop.quit();
     }
 }
