@@ -1,7 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include "shared/customexception.h"
 #include "shared/logger/logger.h"
 #include "videoPlayer/videoplayer.h"
 #include "weather/openmeteoapi.h"
@@ -23,6 +22,8 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
 
     qmlRegisterType<VideoPlayer>("VideoPlayerModule", 1, 0, "VideoPlayer");
+    qmlRegisterType<VideoSelectionModel>("VideoSelection", 1, 0, "VideoSelectionModel");
+
     engine.rootContext()->setContextProperty("openMeteoApi", &openMeteoApi);
     engine.loadFromModule("RaspGui", "Main");
 

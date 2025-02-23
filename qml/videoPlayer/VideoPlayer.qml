@@ -26,16 +26,8 @@ Item {
         id: fileDialog
         currentFolder: StandardPaths.standardLocations(
                            StandardPaths.MoviesLocation)[0]
-        onAccepted: player.source = selectedFile
-    }
-
-    Button {
-        anchors.centerIn: parent
-        width: 50
-        height: 50
-        onClicked: {
-            player.play()
-            ResourcesComponents.setWindowVisibility(Window.FullScreen)
+        onAccepted: {
+            player.appendVideoPath(selectedFile)
         }
     }
 
@@ -100,44 +92,44 @@ Item {
         visible: videoPlayer.isVideoVisible
     }
 
-    // ListView {
-    //     width: parent.width
-    //     height: parent.height
-    //     model: ListModel {
-    //         ListElement {
-    //             row: 0
-    //         }
-    //         ListElement {
-    //             row: 1
-    //         }
-    //         ListElement {
-    //             row: 2
-    //         }
-    //     }
+    GridView {
+        id: gridView
+        anchors.left: parent.left
+        anchors.leftMargin: 0.12 * parent.width
+        anchors.bottom: parent.bottom
+        visible: !videoPlayer.isVideoVisible
+        width: 0.7 * parent.width
+        height: 0.7 * parent.height
+        cellWidth: 160
+        cellHeight: 160
+        clip: true
+        model: player.getVideoSelectionModel()
 
-    //     delegate: Item {
-    //         width: parent.width
-    //         height: 200
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AlwaysOn
+        }
 
-    //         GridView {
-    //             anchors.fill: parent
-    //             cellWidth: 100
-    //             cellHeight: 100
-    //             model: jsonModel
-
-    //             delegate: Rectangle {
-    //                 width: 100
-    //                 height: 100
-    //                 color: "lightblue"
-    //                 border.color: "black"
-    //                 radius: 10
-
-    //                 Text {
-    //                     anchors.centerIn: parent
-    //                     text: model.name
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+        delegate: Item {
+            width: gridView.cellWidth
+            height: gridView.cellHeight
+            ButtonTransparent {
+                width: parent.width
+                height: parent.height
+                //imageVisible: false
+                //source: "image://thumbnailProvider/" + model.urlVideo
+                Image {
+                    anchors.centerIn: parent
+                    width: 0.8 * parent.width
+                    height: 0.8 * parent.height
+                    source: model.thumbnail
+                    fillMode: Image.PreserveAspectFit
+                }
+                onClicked: {
+                    player.source = model.urlVideo
+                    player.play()
+                    ResourcesComponents.setWindowVisibility(Window.FullScreen)
+                }
+            }
+        }
+    }
 }

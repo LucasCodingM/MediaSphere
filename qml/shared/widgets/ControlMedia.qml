@@ -11,7 +11,7 @@ Rectangle {
     color: "transparent"
     opacity: enabled ? 1 : 0
 
-    property Item mediaPlayer
+    property var mediaPlayer
     property alias mediaProgression: mediaProgression
     property alias volumeSlider: volumeSlider
     property alias buttonAudio: buttonAudio

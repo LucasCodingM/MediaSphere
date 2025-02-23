@@ -90,6 +90,8 @@ set(SOURCES_WEATHER
 set(SOURCES_VIDEO_PLAYER
     videoPlayer/videoplayer.h
     videoPlayer/videoplayer.cpp
+    videoPlayer/videoselectionmodel.h
+    videoPlayer/videoselectionmodel.cpp
 )
 
 set(SOURCES_SHARED
@@ -123,6 +125,7 @@ qt_add_qml_module(appRaspGui
         ${SOURCES_WEATHER}
         ${SOURCES_VIDEO_PLAYER}
         ${SOURCES_SHARED}
+        SOURCES videoPlayer/videothumbnailextractor.h videoPlayer/videothumbnailextractor.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
