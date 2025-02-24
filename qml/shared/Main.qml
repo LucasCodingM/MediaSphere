@@ -8,7 +8,7 @@ Window {
     minimumHeight: 600
     visibility: ResourcesComponents.getWindowVisibility()
     visible: true
-    title: qsTr("RaspGui")
+    title: qsTr("MediaSphere")
 
     Background {}
 

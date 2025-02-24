@@ -30,6 +30,7 @@ VideoPlayer::VideoPlayer(QObject *parent)
 
 void VideoPlayer::setupSource()
 {
+    m_settings.remove("recentVideosCollections");
     QUrl url;
     if (!m_settings.value("recentVideosCollections").toStringList().empty())
         url = m_settings.value("recentVideosCollections").toStringList().last();

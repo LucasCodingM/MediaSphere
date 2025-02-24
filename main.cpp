@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<VideoSelectionModel>("VideoSelection", 1, 0, "VideoSelectionModel");
 
     engine.rootContext()->setContextProperty("openMeteoApi", &openMeteoApi);
-    engine.loadFromModule("RaspGui", "Main");
+    engine.loadFromModule("MediaSphere", "Main");
 
     return app.exec();
 }
