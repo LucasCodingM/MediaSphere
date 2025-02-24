@@ -102,6 +102,8 @@ set(SOURCES_SHARED
     shared/logger/logger.h
     shared/logger/logger.cpp
     shared/customexception.h
+    shared/global.h
+    shared/global.cpp
 )
 
 set_source_files_properties(ResourcesComponents.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
@@ -129,7 +131,7 @@ qt_add_qml_module(appMediaSphere
         ${SOURCES_WEATHER}
         ${SOURCES_VIDEO_PLAYER}
         ${SOURCES_SHARED}
-)
+    )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

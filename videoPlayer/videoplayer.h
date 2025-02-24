@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QSettings>
 #include <QUrl>
+#include "shared/global.h"
 #include "videoselectionmodel.h"
 #include "videothumbnailextractor.h"
 #include "videoworker.h"
@@ -27,8 +28,6 @@ public:
     }
 
     Q_INVOKABLE void appendVideoPath(const QString &newPath);
-    void clearVideosCollections();
-    QStringList getVideosCollections() const;
     Q_INVOKABLE void replay();
     Q_INVOKABLE VideoSelectionModel *getVideoSelectionModel();
 
@@ -39,7 +38,7 @@ private slots:
     // Custom slot to handle the sourceChanged signal
     void onFetchingDataReady(
         const QUrl &urlVideo,
-        QImage &thumbnail); // Slot when the data is ready to be updated in the model
+        QString &thumbnail); // Slot when the data is ready to be updated in the model
 
 private:
     QSettings m_settings;

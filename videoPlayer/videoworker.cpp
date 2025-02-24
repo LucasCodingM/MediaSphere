@@ -1,4 +1,5 @@
 #include "videoworker.h"
+#include "shared/global.h"
 
 VideoWorker::VideoWorker(QSettings &settings,
                          VideoSelectionModel *videoSelectionModel,
@@ -12,34 +13,47 @@ VideoWorker::VideoWorker(QSettings &settings,
 
 void VideoWorker::appendVideoPathAsync(const QString &newPath)
 {
-    appendInVideosCollections(newPath);
-    updateDataSelectionModelAsync();
+    if (Global::getInstance()->isNewVideoPlayerDataSettings(newPath)) {
+        appendInVideosCollections(newPath);
+        updateDataSelectionModelAsync();
+    }
 }
 
-QStringList VideoWorker::getVideosCollections()
+QString VideoWorker::exposeThumbnailToQml(QImage &thumbnail)
 {
-    // Retrieve the current video paths from QSettings
-    return m_settings.value("recentVideosCollections").toStringList();
+    QByteArray bArray;
+    QBuffer buffer(&bArray);
+    buffer.open(QIODevice::WriteOnly);
+
+    // Save the image to the buffer in JPEG format
+    thumbnail.save(&buffer, "PNG");
+
+    // Convert the QByteArray to Base64 and prepend the appropriate data URI
+    QString image("data:image/png;base64,");
+    image.append(QString::fromLatin1(bArray.toBase64().data()));
+
+    return image;
 }
 
 void VideoWorker::appendInVideosCollections(QString newPath)
 {
-    QStringList videosCollections = getVideosCollections();
-    // Append the new path to the list (if it's not already in the list)
-    if (!videosCollections.contains(newPath)) {
-        videosCollections.append(newPath);
-    }
-    // Save the updated list back to QSettings
-    m_settings.setValue("recentVideosCollections", videosCollections);
+    QImage i_thumbnail = m_videoThumbNailExtractor.getVideoThumbnail(QUrl(newPath), 200);
+    QString qmlThumbnail = exposeThumbnailToQml(i_thumbnail);
+    QFileInfo fileInfo(newPath);
+    Global::structSettings videoPlayerSettings(newPath, fileInfo.fileName(), qmlThumbnail);
+    QList<Global::structSettings> listVideoPlayerSettings;
+    listVideoPlayerSettings.append(videoPlayerSettings);
+    Global::getInstance()->appendVideoPlayerSettings(listVideoPlayerSettings);
 }
 
 void VideoWorker::updateDataSelectionModelAsync()
 {
-    foreach (QString videoPaths, getVideosCollections()) {
-        const QUrl urlVideoPaths(videoPaths);
+    QList<Global::structSettings> listVideoPlayerSettings = Global::getInstance()
+                                                                ->retrieveVideoPlayerSettings();
+    foreach (Global::structSettings videoPlayerSettings, listVideoPlayerSettings) {
+        const QUrl urlVideoPaths(videoPlayerSettings.s_videoPath);
         if (!m_videoSelectionModel->getUrlVideoList().contains(urlVideoPaths)) {
-            QImage thumbnail = m_videoThumbNailExtractor.getVideoThumbnail(urlVideoPaths, 200);
-            emit fetchingDataReady(urlVideoPaths, thumbnail);
+            emit fetchingDataReady(urlVideoPaths, videoPlayerSettings.s_thumbnail);
         }
     }
 }

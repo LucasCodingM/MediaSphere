@@ -8,6 +8,8 @@
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+    QCoreApplication::setOrganizationName("LucasCodingM");
+    QCoreApplication::setApplicationName("MediaSphere");
 
     Logger oLogger("application.log"); // Log to 'application.log' file
     // Expose the object to QML context

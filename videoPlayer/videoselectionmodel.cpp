@@ -32,35 +32,10 @@ QHash<int, QByteArray> VideoSelectionModel::roleNames() const
     return roles;
 }
 
-void VideoSelectionModel::addData(const QUrl &urlVideo, QImage &thumbnail)
+void VideoSelectionModel::addData(const QUrl &urlVideo, QString &thumbnail)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_urlVideo.append(urlVideo); // Add the thumbnail to the list
-    m_thumbnail.append(exposeThumbnailToQml(thumbnail));
+    m_thumbnail.append(thumbnail);
     endInsertRows();
-}
-
-QString VideoSelectionModel::exposeThumbnailToQml(QImage &thumbnail)
-{
-    // // Load an image, for example:
-    // if (urlVideo.isLocalFile())
-    //     thumbnail.load(urlVideo.toString()); // Replace with your actual image path or resource
-    // else
-    //     thumbnail.load(urlVideo.toLocalFile()); // Replace with your actual image path or resource
-
-    // if (thumbnail.isNull())
-    //     qWarning() << "Impossible de charger " << urlVideo.toLocalFile();
-
-    QByteArray bArray;
-    QBuffer buffer(&bArray);
-    buffer.open(QIODevice::WriteOnly);
-
-    // Save the image to the buffer in JPEG format
-    thumbnail.save(&buffer, "PNG");
-
-    // Convert the QByteArray to Base64 and prepend the appropriate data URI
-    QString image("data:image/png;base64,");
-    image.append(QString::fromLatin1(bArray.toBase64().data()));
-
-    return image;
 }

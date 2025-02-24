@@ -1,6 +1,7 @@
 #ifndef VIDEOWORKER_H
 #define VIDEOWORKER_H
 
+#include <QFileInfo>
 #include <QObject>
 #include <QSettings>
 #include <QThread>
@@ -18,13 +19,11 @@ public:
                          QObject *parent = nullptr);
 
     void appendVideoPathAsync(const QString &newPath);
-    QStringList getVideosCollections();
-
     void appendInVideosCollections(QString newPath);
-
     void updateDataSelectionModelAsync();
+    QString exposeThumbnailToQml(QImage &thumbnail);
 signals:
-    void fetchingDataReady(const QUrl &urlVideo, QImage &thumbnail);
+    void fetchingDataReady(const QUrl &urlVideo, QString &thumbnail);
 
 private:
     QSettings &m_settings;

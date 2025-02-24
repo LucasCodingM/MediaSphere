@@ -30,10 +30,9 @@ VideoPlayer::VideoPlayer(QObject *parent)
 
 void VideoPlayer::setupSource()
 {
-    m_settings.remove("recentVideosCollections");
     QUrl url;
-    if (!m_settings.value("recentVideosCollections").toStringList().empty())
-        url = m_settings.value("recentVideosCollections").toStringList().last();
+    if (!Global::getInstance()->retrieveVideoPlayerSettings().empty())
+        url = Global::getInstance()->retrieveVideoPlayerSettings().last().s_videoPath;
     if (!url.isEmpty())
         this->setSource(url);
 }
@@ -48,16 +47,6 @@ void VideoPlayer::appendVideoPath(const QString &newPath)
     m_videoWorker.appendVideoPathAsync(newPath);
 }
 
-void VideoPlayer::clearVideosCollections()
-{
-    m_settings.setValue("recentVideosCollections", QStringList());
-}
-
-QStringList VideoPlayer::getVideosCollections() const
-{
-    return m_settings.value("recentVideosCollections").toStringList();
-}
-
 void VideoPlayer::replay()
 {
     this->setPosition(0);
@@ -69,7 +58,7 @@ VideoSelectionModel *VideoPlayer::getVideoSelectionModel()
     return m_videoSelectionModel;
 }
 
-void VideoPlayer::onFetchingDataReady(const QUrl &urlVideo, QImage &thumbnail)
+void VideoPlayer::onFetchingDataReady(const QUrl &urlVideo, QString &thumbnail)
 {
     m_videoSelectionModel->addData(urlVideo, thumbnail);
 }

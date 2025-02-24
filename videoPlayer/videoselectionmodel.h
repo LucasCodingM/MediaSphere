@@ -23,10 +23,8 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     // Method to add data to the model (in this case, url video)
-    void addData(const QUrl &urlVideo, QImage &thumbnail); // Store a QUrl for each video
+    void addData(const QUrl &urlVideo, QString &thumbnail); // Store a QUrl for each video
     QList<QUrl> getUrlVideoList() { return m_urlVideo; }
-    QString exposeThumbnailToQml(QImage &thumbnail);
-
 private:
     QList<QUrl> m_urlVideo; // Store the video url
     QList<QString> m_thumbnail; //Store the pixmap
