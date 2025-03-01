@@ -12,7 +12,7 @@ qt_add_executable(appMediaSphere
     main.cpp
 )
 # Set the Qt6 policy for QML modules (this suppresses the warning)
-#qt6_policy(SET QTP0004 NEW)
+qt6_policy(SET QTP0004 NEW)
 
 set(QML_FILES
     qml/shared/Main.qml
@@ -51,6 +51,7 @@ set(RESOURCES
    assets/gamePacman,.png
    assets/gameSnake.png
    assets/games.png
+   assets/iconMediaShere.png
    assets/loop.png
    assets/mainMenu.png
    assets/movie.png

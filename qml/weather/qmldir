@@ -1,0 +1,3 @@
+module MediaSphere.Weather
+Weather 1.0 Weather.qml
+WeatherContainer 1.0 WeatherContainer.qml

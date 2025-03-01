@@ -1,0 +1,4 @@
+module MediaSphere.Shared
+Enum 1.0 Enum.qml
+Header 1.0 Header.qml
+Main 1.0 Main.qml
