@@ -12,12 +12,15 @@ CMAKE_COMMAND="/usr/bin/cmake"
 QT_PATH="/home/lucas/Qt/6.8.2/gcc_64"
 QMAKE_PATH="$QT_PATH/bin/qmake"
 
-# Build the application
-mkdir -p $BUILD_DIR
-cd $BUILD_DIR
-cmake ../../ -DCMAKE_BUILD_TYPE=Release
-make
-cd ../../
+if [ ! -d $BUILD_DIR ] || [ ! -f "$BUILD_DIR/$APP_NAME" ]; then
+	# Build the application
+	mkdir -p $BUILD_DIR
+	cd $BUILD_DIR
+	cmake ../../ -DCMAKE_BUILD_TYPE=Release
+	make
+	cd ../../
+fi
+
 
 # Create deployment directory
 echo "Creating deployment directory"
