@@ -51,5 +51,5 @@ EOL
 # Run linuxdeployqt
 $LINUXDEPLOYQT $DEPLOY_DIR/$APP_NAME -qmake=$QMAKE_PATH -qmldir=$DEPLOY_DIR/$QML_DIR -appimage
 
-echo "Deployment completed. AppImage is located in the $DEPLOY_DIR directory."
+echo "Deployment completed. AppImage is located in the deploy.sh directory."
 
