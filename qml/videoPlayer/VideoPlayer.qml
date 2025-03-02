@@ -49,6 +49,7 @@ Item {
         videoOutput: videoOutput
         onPlaybackStateChanged: {
             if (playbackState == MediaPlayer.PlayingState) {
+                ResourcesComponents.setWindowVisibility(Window.FullScreen)
                 isVideoVisible = true
                 controlMedia.buttonPausePlay.isPlaying = true
             } else if (playbackState == MediaPlayer.PausedState) {
@@ -126,8 +127,6 @@ Item {
                 onClicked: {
                     player.source = model.videoUrl
                     if (player.sourceIsValid()) {
-                        ResourcesComponents.setWindowVisibility(
-                                    Window.FullScreen)
                         player.play()
                     } else
                         messageDialog.visible = true
