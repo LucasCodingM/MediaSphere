@@ -6,6 +6,7 @@ VideoPlayer::VideoPlayer(QObject *parent)
     , m_videoSelectionModel(new VideoSelectionModel())
     , m_videoWorker(m_settings, m_videoSelectionModel, m_videoThumbNailExtractor, parent)
 {
+    //Global::getInstance()->clearAllSettings();
     m_workerThread = new QThread();
     // Move the worker to the thread
     m_videoWorker.moveToThread(m_workerThread);
@@ -13,7 +14,7 @@ VideoPlayer::VideoPlayer(QObject *parent)
     // Connect signals and slots
     connect(m_workerThread, &QThread::started, this, [this]() {
         // Start the append operation
-        m_videoWorker.updateDataSelectionModelAsync();
+        m_videoWorker.updateDataInModelAsync();
     });
 
     connect(&m_videoWorker,
@@ -26,6 +27,14 @@ VideoPlayer::VideoPlayer(QObject *parent)
     setupSource();
     // Start the worker thread
     m_workerThread->start();
+}
+
+VideoPlayer::~VideoPlayer()
+{
+    // Clean up
+    m_workerThread->quit();
+    m_workerThread->wait();
+    delete m_workerThread;
 }
 
 void VideoPlayer::setupSource()
@@ -53,12 +62,19 @@ void VideoPlayer::replay()
     this->play();
 }
 
+bool VideoPlayer::sourceIsValid()
+{
+    return m_videoWorker.fileExist(this->source());
+}
+
 VideoSelectionModel *VideoPlayer::getVideoSelectionModel()
 {
     return m_videoSelectionModel;
 }
 
-void VideoPlayer::onFetchingDataReady(const QUrl &urlVideo, QString &thumbnail)
+void VideoPlayer::onFetchingDataReady(const Global::structVideoPlayerSettings &videoPlayerSettings)
 {
-    m_videoSelectionModel->addData(urlVideo, thumbnail);
+    m_videoSelectionModel->addData(videoPlayerSettings.s_videoPath,
+                                   videoPlayerSettings.s_videoName,
+                                   videoPlayerSettings.s_thumbnail);
 }

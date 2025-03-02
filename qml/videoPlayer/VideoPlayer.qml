@@ -17,7 +17,7 @@ Item {
     ButtonRoundBlueGradient {
         anchors.right: parent.right
         anchors.verticalCenter: buttonBack.verticalCenter
-        text: "Add movies"
+        text: qsTr("Add movies")
         sIconName: "plus.png"
         onClicked: fileDialog.open()
     }
@@ -92,6 +92,13 @@ Item {
         visible: videoPlayer.isVideoVisible
     }
 
+    MessageDialog {
+        id: messageDialog
+        buttons: MessageDialog.Ok
+        title: qsTr("Error File")
+        text: qsTr("File does not exist ") + player.source
+    }
+
     GridView {
         id: gridView
         anchors.left: parent.left
@@ -100,13 +107,13 @@ Item {
         visible: !videoPlayer.isVideoVisible
         width: 0.7 * parent.width
         height: 0.7 * parent.height
-        cellWidth: 160
-        cellHeight: 160
+        cellWidth: 0.16 * parent.width
+        cellHeight: cellWidth
         clip: true
         model: player.getVideoSelectionModel()
 
         ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AlwaysOn
+            policy: ScrollBar.AsNeeded
         }
 
         delegate: Item {
@@ -115,20 +122,28 @@ Item {
             ButtonTransparent {
                 width: parent.width
                 height: parent.height
-                //imageVisible: false
-                //source: "image://thumbnailProvider/" + model.urlVideo
-                Image {
-                    anchors.centerIn: parent
-                    width: 0.8 * parent.width
-                    height: 0.8 * parent.height
-                    source: model.thumbnail
-                    fillMode: Image.PreserveAspectFit
-                }
+                source: model.thumbnail
                 onClicked: {
-                    player.source = model.urlVideo
-                    player.play()
-                    ResourcesComponents.setWindowVisibility(Window.FullScreen)
+                    player.source = model.videoUrl
+                    if (player.sourceIsValid()) {
+                        ResourcesComponents.setWindowVisibility(
+                                    Window.FullScreen)
+                        player.play()
+                    } else
+                        messageDialog.visible = true
                 }
+            }
+            Text {
+                id: textVideoName
+                width: parent.width
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 0.05 * parent.height
+                anchors.horizontalCenter: parent.horizontalCenter
+                horizontalAlignment: Text.AlignHCenter
+                color: "white"
+                font.pixelSize: 0.1 * parent.height
+                wrapMode: Text.WordWrap
+                text: model.videoName
             }
         }
     }

@@ -2,6 +2,7 @@
 #define GLOBAL_H
 #include <QMutex>
 #include <QMutexLocker>
+#include <QUrl>
 
 class Global
 {
@@ -14,26 +15,31 @@ public:
     Global &operator=(const Global &) = delete;
 
     // Nested struct inside the Singleton class
-    struct structSettings
+    struct structVideoPlayerSettings
     {
         QString s_videoPath;
         QString s_videoName;
         QString s_thumbnail;
 
-        structSettings(QString videoPath, QString videoName, QString thumbnail)
+        structVideoPlayerSettings(QString videoPath, QString videoName, QString thumbnail)
             : s_videoPath(videoPath)
             , s_videoName(videoName)
             , s_thumbnail(thumbnail)
         {}
     };
 
+    void initVideoPlayerSettings(const QList<Global::structVideoPlayerSettings> &listSettingsData);
     // Store the settings in the system. In this way, settings will be saved even after reboot
-    void appendVideoPlayerSettings(const QList<Global::structSettings> &listSettingsData);
-    QList<structSettings> getOnlyNewSettings(const QList<Global::structSettings> &pendingList);
-    QList<structSettings> retrieveVideoPlayerSettings();
+    void appendVideoPlayerSettings(const QList<Global::structVideoPlayerSettings> &listSettingsData);
+    QList<structVideoPlayerSettings> getOnlyNewSettings(
+        const QList<Global::structVideoPlayerSettings> &pendingList);
+    QList<structVideoPlayerSettings> retrieveVideoPlayerSettings();
     void removeVideoPlayerSettings() { removeSettings("VideoPlayer"); }
     void removeSettings(const QString settingsName);
+    void clearAllSettings();
     bool isNewVideoPlayerDataSettings(const QString &videoPath);
+
+    void removeVideoPathFromSettings(const QString &videoPath);
 
 private:
     // Private constructor to prevent instantiating from outside

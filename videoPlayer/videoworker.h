@@ -6,6 +6,7 @@
 #include <QSettings>
 #include <QThread>
 #include <QUrl>
+#include "shared/global.h"
 #include "videoselectionmodel.h"
 #include "videothumbnailextractor.h"
 
@@ -20,10 +21,12 @@ public:
 
     void appendVideoPathAsync(const QString &newPath);
     void appendInVideosCollections(QString newPath);
-    void updateDataSelectionModelAsync();
+    void updateDataInModelAsync();
     QString exposeThumbnailToQml(QImage &thumbnail);
+    void keepOnlyValidVideoFiles();
+    bool fileExist(const QUrl &urlFile);
 signals:
-    void fetchingDataReady(const QUrl &urlVideo, QString &thumbnail);
+    void fetchingDataReady(const Global::structVideoPlayerSettings &videoPlayerSettings);
 
 private:
     QSettings &m_settings;

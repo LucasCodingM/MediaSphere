@@ -9,6 +9,7 @@ Button {
     property string sIconName: ""
     property real rotation: 0
     property alias mirror: icone.mirror
+    property alias source: icone.source
 
     //property alias imageVisible: icone.visible
     background: Rectangle {
@@ -20,8 +21,8 @@ Button {
 
         Image {
             id: icone
-            visible: buttonTransparent.sIconName !== ""
-            source: visible ? ResourcesComponents.rootAssetsPath + buttonTransparent.sIconName : ""
+            source: buttonTransparent.sIconName
+                    != "" ? ResourcesComponents.rootAssetsPath + buttonTransparent.sIconName : ""
             fillMode: Image.PreserveAspectFit
             anchors.centerIn: parent
             width: height

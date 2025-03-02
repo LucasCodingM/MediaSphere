@@ -18,11 +18,27 @@ Global *Global::getInstance()
     return m_instance;
 }
 
-void Global::appendVideoPlayerSettings(const QList<Global::structSettings> &listSettingsData)
+void Global::initVideoPlayerSettings(const QList<structVideoPlayerSettings> &listSettingsData)
 {
     QSettings settings;
 
-    QList<structSettings> newListSettingsData = retrieveVideoPlayerSettings()
+    removeVideoPlayerSettings();
+    settings.beginWriteArray("videoPlayer");
+    for (int i = 0; i < listSettingsData.size(); ++i) {
+        settings.setArrayIndex(i);
+        settings.setValue("videoPath", listSettingsData[i].s_videoPath); // name
+        settings.setValue("videoName", listSettingsData[i].s_videoName); // file path
+        settings.setValue("thumbnail",
+                          listSettingsData[i].s_thumbnail); // QImage as byte array
+    }
+    settings.endArray();
+}
+
+void Global::appendVideoPlayerSettings(const QList<Global::structVideoPlayerSettings> &listSettingsData)
+{
+    QSettings settings;
+
+    QList<structVideoPlayerSettings> newListSettingsData = retrieveVideoPlayerSettings()
                                                 + getOnlyNewSettings(listSettingsData);
 
     // Store data in QSettings
@@ -37,11 +53,11 @@ void Global::appendVideoPlayerSettings(const QList<Global::structSettings> &list
     settings.endArray();
 }
 
-QList<Global::structSettings> Global::getOnlyNewSettings(
-    const QList<Global::structSettings> &pendingList)
+QList<Global::structVideoPlayerSettings> Global::getOnlyNewSettings(
+    const QList<Global::structVideoPlayerSettings> &pendingList)
 {
-    QList<Global::structSettings> validatedNewSettings = pendingList;
-    const QList<structSettings> currentListSettings = retrieveVideoPlayerSettings();
+    QList<Global::structVideoPlayerSettings> validatedNewSettings = pendingList;
+    const QList<structVideoPlayerSettings> currentListSettings = retrieveVideoPlayerSettings();
     for (int i = 0; i < pendingList.size(); i++) {
         for (int j = 0; j < currentListSettings.size(); ++j) {
             if (pendingList[i].s_videoPath == currentListSettings[j].s_videoPath) {
@@ -54,7 +70,7 @@ QList<Global::structSettings> Global::getOnlyNewSettings(
 
 bool Global::isNewVideoPlayerDataSettings(const QString &videoPath)
 {
-    const QList<structSettings> currentListSettings = retrieveVideoPlayerSettings();
+    const QList<structVideoPlayerSettings> currentListSettings = retrieveVideoPlayerSettings();
     for (auto &currentSettings : currentListSettings) {
         if (videoPath == currentSettings.s_videoPath) {
             return false;
@@ -63,21 +79,40 @@ bool Global::isNewVideoPlayerDataSettings(const QString &videoPath)
     return true;
 }
 
+void Global::removeVideoPathFromSettings(const QString &videoPath)
+{
+    QList<Global::structVideoPlayerSettings> listVideoPlayerSettings = retrieveVideoPlayerSettings();
+    // Find and remove the Login entry with the given videoPath
+    for (int i = 0; i < listVideoPlayerSettings.size(); ++i) {
+        if (listVideoPlayerSettings[i].s_videoPath == videoPath) {
+            listVideoPlayerSettings.removeAt(i); // Remove the element
+            break;                               // Exit once the matching user is found and removed
+        }
+    }
+    initVideoPlayerSettings(listVideoPlayerSettings);
+}
+
 void Global::removeSettings(const QString settingsName)
 {
     QSettings settings;
     settings.remove(settingsName);
 }
 
-QList<Global::structSettings> Global::retrieveVideoPlayerSettings()
+void Global::clearAllSettings()
 {
     QSettings settings;
-    QList<structSettings> listSettingsData;
+    settings.clear();
+}
+
+QList<Global::structVideoPlayerSettings> Global::retrieveVideoPlayerSettings()
+{
+    QSettings settings;
+    QList<structVideoPlayerSettings> listSettingsData;
 
     int size = settings.beginReadArray("videoPlayer");
     for (int i = 0; i < size; ++i) {
         settings.setArrayIndex(i);
-        structSettings s_settings(settings.value("videoPath").toString(),
+        structVideoPlayerSettings s_settings(settings.value("videoPath").toString(),
                                   settings.value("videoName").toString(),
                                   settings.value("thumbnail").toString());
         listSettingsData.append(s_settings);

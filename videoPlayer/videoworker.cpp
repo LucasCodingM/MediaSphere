@@ -15,7 +15,7 @@ void VideoWorker::appendVideoPathAsync(const QString &newPath)
 {
     if (Global::getInstance()->isNewVideoPlayerDataSettings(newPath)) {
         appendInVideosCollections(newPath);
-        updateDataSelectionModelAsync();
+        updateDataInModelAsync();
     }
 }
 
@@ -40,20 +40,40 @@ void VideoWorker::appendInVideosCollections(QString newPath)
     QImage i_thumbnail = m_videoThumbNailExtractor.getVideoThumbnail(QUrl(newPath), 200);
     QString qmlThumbnail = exposeThumbnailToQml(i_thumbnail);
     QFileInfo fileInfo(newPath);
-    Global::structSettings videoPlayerSettings(newPath, fileInfo.fileName(), qmlThumbnail);
-    QList<Global::structSettings> listVideoPlayerSettings;
+    Global::structVideoPlayerSettings videoPlayerSettings(newPath,
+                                                          fileInfo.fileName(),
+                                                          qmlThumbnail);
+    QList<Global::structVideoPlayerSettings> listVideoPlayerSettings;
     listVideoPlayerSettings.append(videoPlayerSettings);
     Global::getInstance()->appendVideoPlayerSettings(listVideoPlayerSettings);
 }
 
-void VideoWorker::updateDataSelectionModelAsync()
+void VideoWorker::keepOnlyValidVideoFiles()
 {
-    QList<Global::structSettings> listVideoPlayerSettings = Global::getInstance()
-                                                                ->retrieveVideoPlayerSettings();
-    foreach (Global::structSettings videoPlayerSettings, listVideoPlayerSettings) {
+    QList<Global::structVideoPlayerSettings> listVideoPlayerSettings
+        = Global::getInstance()->retrieveVideoPlayerSettings();
+    foreach (auto videoPlayerSettings, listVideoPlayerSettings) {
+        QUrl url(videoPlayerSettings.s_videoPath);
+        if (!fileExist(url)) {
+            Global::getInstance()->removeVideoPathFromSettings(videoPlayerSettings.s_videoPath);
+        }
+    }
+}
+
+bool VideoWorker::fileExist(const QUrl &urlFile)
+{
+    return QFile::exists(urlFile.toLocalFile());
+}
+
+void VideoWorker::updateDataInModelAsync()
+{
+    keepOnlyValidVideoFiles();
+    QList<Global::structVideoPlayerSettings> listVideoPlayerSettings
+        = Global::getInstance()->retrieveVideoPlayerSettings();
+    foreach (Global::structVideoPlayerSettings videoPlayerSettings, listVideoPlayerSettings) {
         const QUrl urlVideoPaths(videoPlayerSettings.s_videoPath);
         if (!m_videoSelectionModel->getUrlVideoList().contains(urlVideoPaths)) {
-            emit fetchingDataReady(urlVideoPaths, videoPlayerSettings.s_thumbnail);
+            emit fetchingDataReady(videoPlayerSettings);
         }
     }
 }

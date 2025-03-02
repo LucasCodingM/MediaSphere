@@ -19,16 +19,11 @@ class VideoPlayer : public QMediaPlayer
 public:
     explicit VideoPlayer(QObject *parent = nullptr);
 
-    ~VideoPlayer()
-    {
-        // Clean up
-        m_workerThread->quit();
-        m_workerThread->wait();
-        delete m_workerThread;
-    }
+    ~VideoPlayer();
 
     Q_INVOKABLE void appendVideoPath(const QString &newPath);
     Q_INVOKABLE void replay();
+    Q_INVOKABLE bool sourceIsValid();
     Q_INVOKABLE VideoSelectionModel *getVideoSelectionModel();
 
 protected:
@@ -37,8 +32,8 @@ protected:
 private slots:
     // Custom slot to handle the sourceChanged signal
     void onFetchingDataReady(
-        const QUrl &urlVideo,
-        QString &thumbnail); // Slot when the data is ready to be updated in the model
+        const Global::structVideoPlayerSettings
+            &videoPlayerSettings); // Slot when the data is ready to be updated in the model
 
 private:
     QSettings m_settings;

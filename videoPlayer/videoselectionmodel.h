@@ -12,22 +12,23 @@ class VideoSelectionModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum Role {
-        UrlVideoRole = Qt::UserRole + 1, // Change to represent the urlVideo
-        Thumbnail = Qt::UserRole + 2
+        UrlVideoRole = Qt::UserRole + 1,
+        Thumbnail = Qt::UserRole + 2,
+        NameVideoRole = Qt::UserRole + 3,
     };
 
     explicit VideoSelectionModel(QObject *parent = nullptr);
-    // Overriding necessary QAbstractListModel methods
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    // Method to add data to the model (in this case, url video)
-    void addData(const QUrl &urlVideo, QString &thumbnail); // Store a QUrl for each video
-    QList<QUrl> getUrlVideoList() { return m_urlVideo; }
+    void addData(const QString &videoPath, const QString &videoName, const QString &thumbnail);
+    QList<QUrl> getUrlVideoList() { return m_listUrlVideo; }
+
 private:
-    QList<QUrl> m_urlVideo; // Store the video url
-    QList<QString> m_thumbnail; //Store the pixmap
+    QList<QUrl> m_listUrlVideo;
+    QList<QString> m_listNameVideo;
+    QList<QString> m_listThumbnail;
 };
 
 #endif // VIDEOSELECTIONMODEL_H
