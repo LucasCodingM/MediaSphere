@@ -6,7 +6,7 @@ Button {
     id: buttonBack
     width: 0.3 * parent.width
     height: 0.15 * parent.height
-    property string textButtonBack: "MAIN MENU"
+    property string textButtonBack: qsTr("MAIN MENU")
     property string sIconName: "back.png"
 
     background: Rectangle {

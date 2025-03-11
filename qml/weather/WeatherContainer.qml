@@ -36,7 +36,7 @@ Rectangle {
 
     function getDayOfWeek() {
         if (iDayOfWeek == 0)
-            return "TODAY"
+            return qsTr("TODAY")
         var today = new Date()
         var dayChoosen = new Date(today)
         dayChoosen.setDate(today.getDate() + iDayOfWeek) // Add n day

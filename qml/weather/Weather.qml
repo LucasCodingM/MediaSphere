@@ -17,7 +17,7 @@ Item {
     ButtonRoundBlueGradient {
         anchors.right: parent.right
         anchors.verticalCenter: buttonBack.verticalCenter
-        text: "Refresh"
+        text: qsTr("Refresh")
         sIconName: "refresh.png"
         onClicked: openMeteoApi.fetchWeather()
     }

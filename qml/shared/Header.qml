@@ -6,12 +6,12 @@ Rectangle {
     width: parent.width
     height: 0.08 * parent.height
 
-    property string mainMenu: "MAIN MENU"
-    property string audioPlayerMenu: "AUDIO PLAYER"
-    property string parameterMenu: "PARAMETER"
-    property string videoPlayerMenu: "VIDEO PLAYER"
-    property string weatherMenu: "WEATHER"
-    property string gamesMenu: "GAMES"
+    property string mainMenu: qsTr("MAIN MENU")
+    property string audioPlayerMenu: qsTr("AUDIO PLAYER")
+    property string parameterMenu: qsTr("PARAMETER")
+    property string videoPlayerMenu: qsTr("VIDEO PLAYER")
+    property string weatherMenu: qsTr("WEATHER")
+    property string gamesMenu: qsTr("GAMES")
 
     property string mainMenuIcone: "mainMenu.png"
     property string audioPlayerMenuIcone: "music.png"

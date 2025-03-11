@@ -1,16 +1,24 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 
 project(MediaSphere VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick Multimedia)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick Multimedia LinguistTools)
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES fr)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(appMediaSphere
     main.cpp
 )
+
+set(TRANSLATION_DIR "${CMAKE_CURRENT_SOURCE_DIR}/translations")
+qt6_add_translations(appMediaSphere
+    QM_FILES_OUTPUT_VARIABLE qm_files
+    TS_FILE_DIR "translations")
+install(FILES ${qm_files} DESTINATION ${TRANSLATION_DIR})
+
 # Set the Qt6 policy for QML modules (this suppresses the warning)
 qt6_policy(SET QTP0004 NEW)
 

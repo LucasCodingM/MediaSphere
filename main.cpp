@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QTranslator>
 #include "shared/logger/logger.h"
 #include "videoPlayer/videoplayer.h"
 #include "weather/openmeteoapi.h"
@@ -14,6 +15,13 @@ int main(int argc, char *argv[])
     Logger oLogger("application.log"); // Log to 'application.log' file
     // Expose the object to QML context
     openMeteoAPI openMeteoApi;
+
+    // Create a QTranslator object and load a translation file (e.g., en.qm)
+    QTranslator translator;
+    if (translator.load("MediaSphere_fr.qm")) {
+        app.installTranslator(&translator);
+        qInfo() << "Loading translations files";
+    }
 
     QQmlApplicationEngine engine;
     QObject::connect(
