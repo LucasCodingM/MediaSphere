@@ -14,6 +14,8 @@ Window {
 
     Header {
         id: header
+        visible: ResourcesComponents.getWindowVisibility() != Window.FullScreen
+        z: 1
     }
 
     Loader {

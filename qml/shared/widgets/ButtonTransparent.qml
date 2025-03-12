@@ -10,6 +10,7 @@ Button {
     property real rotation: 0
     property alias mirror: icone.mirror
     property alias source: icone.source
+    property real radius: buttonTransparent.width / 4
 
     //property alias imageVisible: icone.visible
     background: Rectangle {
@@ -17,7 +18,7 @@ Button {
         color: "transparent"
         border.color: buttonTransparent.down ? "white" : "transparent"
         border.width: 1
-        radius: buttonTransparent.width / 4
+        radius: buttonTransparent.radius
 
         Image {
             id: icone

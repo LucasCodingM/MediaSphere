@@ -124,6 +124,7 @@ Item {
                 width: parent.width
                 height: parent.height
                 source: model.thumbnail
+                radius: 5
                 onClicked: {
                     player.source = model.videoUrl
                     if (player.sourceIsValid()) {
@@ -135,13 +136,15 @@ Item {
             Text {
                 id: textVideoName
                 width: parent.width
+                height: 10
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 0.05 * parent.height
+                anchors.bottomMargin: 0.1 * parent.height
                 anchors.horizontalCenter: parent.horizontalCenter
                 horizontalAlignment: Text.AlignHCenter
                 color: "white"
                 font.pixelSize: 0.1 * parent.height
                 wrapMode: Text.WordWrap
+                elide: Text.ElideRight
                 text: model.videoName
             }
         }

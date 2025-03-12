@@ -1,5 +1,7 @@
 import QtQuick
 import "../.."
+import "widgets"
+import QtQuick.Dialogs
 
 Rectangle {
     id: header
@@ -91,15 +93,25 @@ Rectangle {
         }
     }
 
-    Image {
-        id: iconePowerOff
+    MessageDialog {
+        id: exitDialog
+        text: qsTr("Are you sure you want to exit?")
+        buttons: MessageDialog.Ok | MessageDialog.Cancel
+
+        onAccepted: Qt.quit()
+        onRejected: {
+            console.log("Exit canceled")
+        }
+    }
+
+    ButtonTransparent {
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: 0.02 * parent.width
-        height: 0.6 * parent.height
+        height: 0.7 * parent.height
         width: height
-        fillMode: Image.PreserveAspectFit
-        source: ResourcesComponents.rootAssetsPath + "power.png"
+        sIconName: "power.png"
+        onClicked: exitDialog.open()
     }
 
     Item {

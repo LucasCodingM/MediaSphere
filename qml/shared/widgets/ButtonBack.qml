@@ -4,7 +4,7 @@ import "../../.."
 
 Button {
     id: buttonBack
-    width: 0.3 * parent.width
+    width: 0.4 * parent.width
     height: 0.15 * parent.height
     property string textButtonBack: qsTr("MAIN MENU")
     property string sIconName: "back.png"
@@ -26,7 +26,7 @@ Button {
             anchors.leftMargin: 0.03 * parent.width
             anchors.verticalCenter: parent.verticalCenter
             width: height
-            height: 0.8 * parent.height
+            height: 0.5 * parent.height
         }
 
         Text {
@@ -37,7 +37,7 @@ Button {
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             text: buttonBack.textButtonBack
-            font.pixelSize: 0.1 * parent.width
+            font.pixelSize: 0.09 * parent.width
             color: "white"
         }
     }

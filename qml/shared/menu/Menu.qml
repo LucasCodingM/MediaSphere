@@ -21,15 +21,15 @@ Item {
     PageIndicator {
         id: indicator
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 25
+        anchors.bottomMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
 
         count: view.count
         currentIndex: view.currentIndex
         delegate: Rectangle {
 
-            implicitWidth: index === indicator.currentIndex ? 40 : 80
-            implicitHeight: 40
+            implicitWidth: index === indicator.currentIndex ? implicitHeight : 2.5 * implicitHeight
+            implicitHeight: 0.03 * mainMenu.height
 
             radius: width / 2
             color: "white"
