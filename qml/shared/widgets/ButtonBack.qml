@@ -22,6 +22,7 @@ Button {
             id: icone
             source: ResourcesComponents.rootAssetsPath + buttonBack.sIconName
             fillMode: Image.PreserveAspectFit
+            mipmap: true
             anchors.left: parent.left
             anchors.leftMargin: 0.03 * parent.width
             anchors.verticalCenter: parent.verticalCenter

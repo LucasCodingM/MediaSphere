@@ -25,6 +25,7 @@ Button {
             source: buttonTransparent.sIconName
                     != "" ? ResourcesComponents.rootAssetsPath + buttonTransparent.sIconName : ""
             fillMode: Image.PreserveAspectFit
+            mipmap: true
             anchors.centerIn: parent
             width: height
             height: 0.8 * parent.height

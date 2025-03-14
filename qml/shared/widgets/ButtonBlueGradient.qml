@@ -36,6 +36,7 @@ Button {
             id: icone
             source: ResourcesComponents.rootAssetsPath + buttonBlue.sIconName
             fillMode: Image.PreserveAspectFit
+            mipmap: true
             anchors.centerIn: parent
             width: buttonBlue.iconeWidth
         }

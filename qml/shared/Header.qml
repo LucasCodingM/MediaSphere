@@ -124,6 +124,7 @@ Rectangle {
             height: 0.8 * parent.height
             width: height
             fillMode: Image.PreserveAspectFit
+            mipmap: true
             source: ResourcesComponents.rootAssetsPath + header.currentHeaderMenuIcone
         }
         Text {

@@ -96,6 +96,7 @@ Rectangle {
         anchors.topMargin: 0.2 * parent.height
         source: ResourcesComponents.rootAssetsPath + "degrees.png"
         fillMode: Image.PreserveAspectFit
+        mipmap: true
         height: 0.3 * parent.height
     }
 
