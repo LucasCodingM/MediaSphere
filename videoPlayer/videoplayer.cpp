@@ -24,7 +24,7 @@ VideoPlayer::VideoPlayer(QObject *parent)
 
     //clearVideosCollections();
     // Update media source on the last watched video
-    setupSource();
+    setupToLastValidSource();
     // Start the worker thread
     m_workerThread->start();
 }
@@ -37,7 +37,7 @@ VideoPlayer::~VideoPlayer()
     delete m_workerThread;
 }
 
-void VideoPlayer::setupSource()
+void VideoPlayer::setupToLastValidSource()
 {
     QUrl url;
     if (!Global::getInstance()->retrieveVideoPlayerSettings().empty())

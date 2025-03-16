@@ -1,5 +1,6 @@
 #include "logger.h"
 
+// Initialize the static member
 QTextStream Logger::m_textStream;
 
 Logger::Logger(const QString &logFileName)

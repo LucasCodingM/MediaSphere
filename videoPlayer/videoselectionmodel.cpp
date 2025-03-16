@@ -18,9 +18,9 @@ QVariant VideoSelectionModel::data(const QModelIndex &index, int role) const
     if (role == UrlVideoRole) {
         return m_listUrlVideo.at(index.row()); // Return the url video
     } else if (role == Thumbnail) {
-        return m_listThumbnail.at(index.row());
+        return m_listThumbnail.at(index.row()); // Return the thumbnail video
     } else if (role == NameVideoRole) {
-        return m_listNameVideo.at(index.row());
+        return m_listNameVideo.at(index.row()); // Return the name video
     }
 
     return QVariant();
