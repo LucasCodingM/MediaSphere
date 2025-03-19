@@ -4,7 +4,7 @@ project(MediaSphere VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick Multimedia LinguistTools)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick Multimedia LinguistTools QuickControls2)
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES fr)
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -117,18 +117,6 @@ set(SOURCES_SHARED
 
 set_source_files_properties(ResourcesComponents.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
-# # Set the path to the QML files
-# # Copy QML files to the build output directory
-# file(COPY ${QML_FILES} DESTINATION ${CMAKE_BINARY_DIR}/qml)
-
-# # Install QML files to the final package location
-# install(DIRECTORY qml/ DESTINATION ${CMAKE_INSTALL_PREFIX}/qml)
-
-# # Set QML import path
-# set_target_properties(appRaspGui PROPERTIES
-#     QML_IMPORT_PATH ${CMAKE_BINARY_DIR}/qml
-# )
-
 qt_add_qml_module(appMediaSphere
     URI MediaSphere
     VERSION 1.0
@@ -157,6 +145,7 @@ target_link_libraries(appMediaSphere
     PRIVATE Qt6::Quick
     Qt6::Multimedia
     Qt6::Core
+    Qt6::QuickControls2
 )
 
 include(GNUInstallDirs)

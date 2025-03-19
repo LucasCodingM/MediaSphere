@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QTranslator>
+#include <QQuickStyle>
 #include "shared/logger/logger.h"
 #include "videoPlayer/videoplayer.h"
 #include "weather/openmeteoapi.h"
@@ -11,6 +12,9 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QCoreApplication::setOrganizationName("LucasCodingM");
     QCoreApplication::setApplicationName("MediaSphere");
+
+    // Set the style globally for the application
+    QQuickStyle::setStyle("Fusion");
 
     Logger oLogger("application.log"); // Log to 'application.log' file
     // Expose the object to QML context
