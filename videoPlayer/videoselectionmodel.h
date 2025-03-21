@@ -79,6 +79,10 @@ public:
     void addData(const QString &videoPath, const QString &videoName, const QString &thumbnail);
     QList<QUrl> getUrlVideoList() { return m_listUrlVideo; }
 
+    void removeData(int row);
+
+    void removeDataByVideoPath(const QString &videoPath);
+
 private:
     QList<QUrl> m_listUrlVideo;     /**< List of video URLs. */
     QList<QString> m_listNameVideo; /**< List of video names. */

@@ -27,7 +27,7 @@ set(QML_FILES
     qml/shared/Header.qml
     ResourcesComponents.qml
     qml/shared/Enum.qml
-    qml/shared/menu/Menu.qml
+    qml/shared/menu/MainMenu.qml
     qml/shared/menu/MenuPage1.qml
     qml/shared/menu/MenuPage2.qml
     qml/shared/widgets/Background.qml

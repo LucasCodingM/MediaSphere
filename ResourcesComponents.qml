@@ -65,7 +65,7 @@ Item {
 
     Component {
         id: menuComponent
-        Menu {}
+        MainMenu {}
     }
 
     Component {

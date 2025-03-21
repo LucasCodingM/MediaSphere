@@ -21,7 +21,7 @@ Global *Global::getInstance()
 void Global::initVideoPlayerSettings(const QList<structVideoPlayerSettings> &listSettingsData)
 {
     QSettings settings;
-
+    // Deleting videoPlayer settings before initialisation
     removeVideoPlayerSettings();
     settings.beginWriteArray("videoPlayer");
     for (int i = 0; i < listSettingsData.size(); ++i) {
@@ -32,6 +32,7 @@ void Global::initVideoPlayerSettings(const QList<structVideoPlayerSettings> &lis
                           listSettingsData[i].s_thumbnail); // QImage as byte array
     }
     settings.endArray();
+    qDebug() << "initVideoPlayerSettings ended successfully";
 }
 
 void Global::appendVideoPlayerSettings(const QList<Global::structVideoPlayerSettings> &listSettingsData)
@@ -82,14 +83,20 @@ bool Global::isNewVideoPlayerDataSettings(const QString &videoPath)
 void Global::removeVideoPathFromSettings(const QString &videoPath)
 {
     QList<Global::structVideoPlayerSettings> listVideoPlayerSettings = retrieveVideoPlayerSettings();
+    bool hasBeenRemoved = false;
     // Find and remove the Login entry with the given videoPath
     for (int i = 0; i < listVideoPlayerSettings.size(); ++i) {
         if (listVideoPlayerSettings[i].s_videoPath == videoPath) {
             listVideoPlayerSettings.removeAt(i); // Remove the element
-            break;                               // Exit once the matching user is found and removed
+            hasBeenRemoved = true;
+            break; // Exit once the matching user is found and removed
         }
     }
-    initVideoPlayerSettings(listVideoPlayerSettings);
+    if (hasBeenRemoved) {
+        qDebug() << videoPath << " has been removed";
+        initVideoPlayerSettings(listVideoPlayerSettings);
+    } else
+        qWarning() << videoPath << " has not been removed -> reason: not found";
 }
 
 void Global::removeSettings(const QString settingsName)

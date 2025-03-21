@@ -72,6 +72,13 @@ VideoSelectionModel *VideoPlayer::getVideoSelectionModel()
     return m_videoSelectionModel;
 }
 
+void VideoPlayer::deleteVideo(const QString &videoPath)
+{
+    // m_videoWorker.deleteVideo(videoPath);
+    Global::getInstance()->removeVideoPathFromSettings(videoPath);
+    m_videoSelectionModel->removeDataByVideoPath(videoPath);
+}
+
 void VideoPlayer::onFetchingDataReady(const Global::structVideoPlayerSettings &videoPlayerSettings)
 {
     m_videoSelectionModel->addData(videoPlayerSettings.s_videoPath,

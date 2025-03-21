@@ -45,3 +45,34 @@ void VideoSelectionModel::addData(const QString &videoPath,
     m_listThumbnail.append(thumbnail);
     endInsertRows();
 }
+
+void VideoSelectionModel::removeData(int row)
+{
+    if (row == -1) {
+        qWarning() << "Row number is not valid";
+        return;
+    }
+    // Notify the model that a row is about to be removed
+    beginRemoveRows(QModelIndex(), row, row);
+
+    // Remove the data from the internal lists
+    m_listUrlVideo.removeAt(row);
+    m_listNameVideo.removeAt(row);
+    m_listThumbnail.removeAt(row);
+
+    // Notify the model that the row has been removed
+    endRemoveRows();
+}
+
+void VideoSelectionModel::removeDataByVideoPath(const QString &videoPath)
+{
+    // Find the row index corresponding to the videoPath
+    int row = -1;
+    for (int i = 0; i < m_listUrlVideo.size(); ++i) {
+        if (m_listUrlVideo[i].toString() == videoPath) {
+            row = i;
+            break;
+        }
+    }
+    removeData(row);
+}

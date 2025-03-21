@@ -25,7 +25,6 @@ Window {
             header.setMenuHeader(ResourcesComponents.currentWindowName)
         }
     }
-
     Component.onCompleted: {
         ResourcesComponents.setLoader(loader)
         ResourcesComponents.loadComponent(Enum.WindowName.Menu)

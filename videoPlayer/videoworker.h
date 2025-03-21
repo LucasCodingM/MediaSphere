@@ -106,6 +106,8 @@ public:
      */
     bool fileExist(const QUrl &urlFile);
 
+    void deleteVideo(const QString &videoPath);
+
 signals:
     /**
      * @brief Signal emitted when data is ready to be updated in the model asynchronously.

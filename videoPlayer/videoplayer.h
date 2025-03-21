@@ -85,6 +85,8 @@ public:
      */
     Q_INVOKABLE VideoSelectionModel *getVideoSelectionModel();
 
+    Q_INVOKABLE void deleteVideo(const QString &videoPath);
+
 protected:
     /**
      * @brief Sets up the video source for the VideoPlayer.

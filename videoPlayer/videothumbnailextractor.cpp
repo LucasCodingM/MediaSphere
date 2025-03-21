@@ -1,4 +1,5 @@
 #include "videothumbnailextractor.h"
+#include <QTimer>
 
 VideoThumbNailExtractor::VideoThumbNailExtractor(QObject *parent)
     : QObject{parent}
@@ -28,7 +29,20 @@ QImage VideoThumbNailExtractor::getVideoThumbnail(const QUrl &videoUrl, int time
     m_player->play();
     m_player->setPosition(timeInMilliseconds); // Set to capture the thumbnail at 1 second (1000 ms)
 
+    // Create and configure the QTimer
+    QTimer timer;
+    timer.setSingleShot(true); // Ensure the timer triggers only once
+    QObject::connect(&timer, &QTimer::timeout, &m_loop, &QEventLoop::quit);
+
+    // Start the timer with a timeout duration (e.g., 5 seconds)
+    timer.start(3000);
+
     m_loop.exec(); // This blocks until the frame is captured
+
+    // Check if the thumbnail was captured
+    if (m_thumbnail.isNull()) {
+        qWarning("Failed to capture thumbnail within the timeout period.");
+    }
 
     // Return the captured thumbnail image
     return m_thumbnail;

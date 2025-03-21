@@ -15,6 +15,7 @@ Item {
     property bool isVideoVisible: false
 
     ButtonRoundBlueGradient {
+        id: buttonAddMovies
         anchors.right: parent.right
         anchors.verticalCenter: buttonBack.verticalCenter
         text: qsTr("Add movies")
@@ -100,6 +101,25 @@ Item {
         text: qsTr("File does not exist ") + player.source
     }
 
+    Component {
+        id: menuItemComponent
+
+        MenuItem {}
+    }
+
+    //Context Menu
+    Menu {
+        id: contextMenu
+
+        MenuItem {
+            text: qsTr("Delete")
+            onTriggered: {
+                console.log("Delete triggered")
+                gridView.currentItem.selfDelete()
+            }
+        }
+    }
+
     GridView {
         id: gridView
         anchors.left: parent.left
@@ -120,11 +140,35 @@ Item {
         delegate: Item {
             width: gridView.cellWidth
             height: gridView.cellHeight
+
+            function selfDelete() {
+                player.deleteVideo(model.videoUrl)
+            }
+
             ButtonTransparent {
                 width: parent.width
                 height: parent.height
                 source: model.thumbnail
                 radius: 5
+                MouseArea {
+                    id: mouseArea
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: mouse => {
+                                   if (mouse.button == Qt.RightButton) {
+                                       // Show the context menu on right-click
+                                       contextMenu.popup(mapToGlobal(mouse.x,
+                                                                     mouse.y))
+                                   } else
+                                   parent.clicked()
+                               }
+                    onPressAndHold: mouse => {
+                                        if (mouse.source === Qt.MouseEventNotSynthesized)
+                                        contextMenu.popup(mapToGlobal(mouse.x,
+                                                                      mouse.y))
+                                    }
+                }
+
                 onClicked: {
                     player.source = model.videoUrl
                     if (player.sourceIsValid()) {

@@ -37,6 +37,7 @@ QString VideoWorker::exposeThumbnailToQml(QImage &thumbnail)
 
 void VideoWorker::appendInVideosCollections(QString newPath)
 {
+    //Extract the thumbnail
     QImage i_thumbnail = m_videoThumbNailExtractor.getVideoThumbnail(QUrl(newPath), 200);
     QString qmlThumbnail = exposeThumbnailToQml(i_thumbnail);
     QFileInfo fileInfo(newPath);
@@ -45,6 +46,7 @@ void VideoWorker::appendInVideosCollections(QString newPath)
                                                           qmlThumbnail);
     QList<Global::structVideoPlayerSettings> listVideoPlayerSettings;
     listVideoPlayerSettings.append(videoPlayerSettings);
+    // Update the videos list in the videoPlayer settings
     Global::getInstance()->appendVideoPlayerSettings(listVideoPlayerSettings);
 }
 
@@ -52,6 +54,7 @@ void VideoWorker::keepOnlyValidVideoFiles()
 {
     QList<Global::structVideoPlayerSettings> listVideoPlayerSettings
         = Global::getInstance()->retrieveVideoPlayerSettings();
+    // Delete each unvalid video (ex: file doesn't exist or it's not a video)
     foreach (auto videoPlayerSettings, listVideoPlayerSettings) {
         QUrl url(videoPlayerSettings.s_videoPath);
         if (!fileExist(url)) {
@@ -65,13 +68,22 @@ bool VideoWorker::fileExist(const QUrl &urlFile)
     return QFile::exists(urlFile.toLocalFile());
 }
 
+void VideoWorker::deleteVideo(const QString &videoPath)
+{
+    Global::getInstance()->removeVideoPathFromSettings(videoPath);
+    m_videoSelectionModel->removeDataByVideoPath(videoPath);
+}
+
 void VideoWorker::updateDataInModelAsync()
 {
     keepOnlyValidVideoFiles();
+    //Get the video player list from the settings
     QList<Global::structVideoPlayerSettings> listVideoPlayerSettings
         = Global::getInstance()->retrieveVideoPlayerSettings();
+
     foreach (Global::structVideoPlayerSettings videoPlayerSettings, listVideoPlayerSettings) {
         const QUrl urlVideoPaths(videoPlayerSettings.s_videoPath);
+        // If the video is not already in the model data then add it
         if (!m_videoSelectionModel->getUrlVideoList().contains(urlVideoPaths)) {
             emit fetchingDataReady(videoPlayerSettings);
         }
