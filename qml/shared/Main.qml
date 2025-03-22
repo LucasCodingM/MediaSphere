@@ -4,8 +4,8 @@ import "../.."
 
 Window {
     id: mainWindow
-    minimumWidth: 1024
-    minimumHeight: 600
+    minimumWidth: 924
+    minimumHeight: 500
     visibility: ResourcesComponents.getWindowVisibility()
     visible: true
     title: qsTr("MediaSphere")
@@ -14,7 +14,7 @@ Window {
 
     Header {
         id: header
-        visible: ResourcesComponents.getWindowVisibility() != Window.FullScreen
+        visible: ResourcesComponents.getHeaderIsVisible()
         z: 1
     }
 

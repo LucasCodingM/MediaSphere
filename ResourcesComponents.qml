@@ -16,6 +16,15 @@ Item {
 
     property int windowVisibility: Window.AutomaticVisibility
 
+    property bool headerIsVisible: true
+
+    function getHeaderIsVisible() {
+        return headerIsVisible
+    }
+    function setHeaderIsVisible(isVisible) {
+        headerIsVisible = isVisible
+    }
+
     function getWindowVisibility() {
         return windowVisibility
     }

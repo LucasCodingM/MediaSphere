@@ -51,12 +51,14 @@ Item {
         onPlaybackStateChanged: {
             if (playbackState == MediaPlayer.PlayingState) {
                 ResourcesComponents.setWindowVisibility(Window.FullScreen)
+                ResourcesComponents.setHeaderIsVisible(false)
                 isVideoVisible = true
                 controlMedia.buttonPausePlay.isPlaying = true
             } else if (playbackState == MediaPlayer.PausedState) {
                 isVideoVisible = true
                 controlMedia.buttonPausePlay.isPlaying = false
             } else {
+                ResourcesComponents.setHeaderIsVisible(true)
                 isVideoVisible = false
                 controlMedia.buttonPausePlay.isPlaying = false
             }
@@ -111,12 +113,39 @@ Item {
     Menu {
         id: contextMenu
 
+        // MenuItem {
+        //     text: qsTr("Remove")
+        //     onTriggered: {
+        //         console.log("Remove triggered")
+        //         gridView.currentItem.selfDelete()
+        //     }
+        // }
         MenuItem {
-            text: qsTr("Delete")
+            id: menuItem
+            implicitWidth: parent.width
+            implicitHeight: 40
+
+            text: qsTr("Remove")
             onTriggered: {
-                console.log("Delete triggered")
+                console.log("Remove triggered")
                 gridView.currentItem.selfDelete()
             }
+
+            background: Rectangle {
+                opacity: enabled ? 1 : 0.3
+                color: menuItem.hovered ? "lightcoral" : "white"
+                border.color: menuItem.pressed ? "crimson" : "transparent"
+                border.width: 3
+                radius: 8
+            }
+        }
+
+        background: Rectangle {
+            implicitWidth: 100
+            implicitHeight: 40
+            color: "transparent"
+            // border.color: menuItem.pressed ? "grey" : "transparent"
+            radius: 8
         }
     }
 
@@ -157,15 +186,17 @@ Item {
                     onClicked: mouse => {
                                    if (mouse.button == Qt.RightButton) {
                                        // Show the context menu on right-click
-                                       contextMenu.popup(mapToGlobal(mouse.x,
-                                                                     mouse.y))
+                                       contextMenu.popup(mapToItem(videoPlayer,
+                                                                   mouse.x,
+                                                                   mouse.y))
                                    } else
                                    parent.clicked()
                                }
                     onPressAndHold: mouse => {
-                                        if (mouse.source === Qt.MouseEventNotSynthesized)
-                                        contextMenu.popup(mapToGlobal(mouse.x,
-                                                                      mouse.y))
+                                        // if (mouse.source === Qt.MouseEventNotSynthesized)
+                                        contextMenu.popup(mapToItem(
+                                                              videoPlayer,
+                                                              mouse.x, mouse.y))
                                     }
                 }
 
