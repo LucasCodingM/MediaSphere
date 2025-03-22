@@ -13,7 +13,7 @@
 #include <QSettings>
 #include <QThread>
 #include <QUrl>
-#include "shared/global.h"
+#include "src/shared/global.h"
 #include "videoselectionmodel.h"
 #include "videothumbnailextractor.h"
 

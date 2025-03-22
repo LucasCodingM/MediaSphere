@@ -10,7 +10,7 @@ Item {
 
     property Item loader
 
-    property string rootAssetsPath: "qrc:/qt/qml/MediaSphere/assets/"
+    property string rootAssetsPath: "qrc:/qt/qml/MediaSphere/src/assets/"
 
     property int currentWindowName: -1
 

@@ -1,5 +1,5 @@
 #include "videoworker.h"
-#include "shared/global.h"
+#include "src/shared/global.h"
 
 VideoWorker::VideoWorker(QSettings &settings,
                          VideoSelectionModel *videoSelectionModel,

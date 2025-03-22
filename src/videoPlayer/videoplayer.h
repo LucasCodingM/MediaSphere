@@ -16,7 +16,7 @@
 #include <QObject>
 #include <QSettings>
 #include <QUrl>
-#include "shared/global.h"
+#include "src/shared/global.h"
 #include "videoselectionmodel.h"
 #include "videothumbnailextractor.h"
 #include "videoworker.h"
