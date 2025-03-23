@@ -27,7 +27,7 @@ openMeteoAPI::openMeteoAPI(QObject *parent)
             &QTimer::timeout,
             this,
             &openMeteoAPI::onTimeout); // Connect the timeout signal to the slot
-    timer->start(60000);               // Start the timer in ms interval (1min)
+    timer->start(60000);               // Start the timer in ms interval (1h)
 }
 
 void openMeteoAPI::serviceRequestFinished(QNetworkReply *networkReply)
@@ -51,7 +51,7 @@ void openMeteoAPI::updateDataFromRequest(QNetworkReply *networkReply)
         qDebug() << "infoWeather received";
         m_jsonInfoWeather = doc.object();
         m_bIsDataAvailable = true;
-        emit requestFinished();
+        emit requestFinished(); // signal the weather GUI to update data
     } else if (requestId == "infoIp") {
         qDebug() << "infoIp received";
         // Init the urlInfoWeather with location parameter and others if needed
