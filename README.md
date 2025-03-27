@@ -30,7 +30,8 @@ To build the app in release mode, run the following command:
 ./build.sh
 ```
 ### Deployment
-If you want to use this app without any external dependencies, you can deploy an AppImage using linuxdeployqt 
+If you want to use this app without any external dependencies, you can deploy an AppImage using linuxdeployqt
+
 You will need to install linuxdeployqt on a old OS (like Ubuntu 20.04):
 - [linuxdeployqt](https://github.com/probonopd/linuxdeployqt)
 
