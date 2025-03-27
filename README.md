@@ -39,4 +39,7 @@ Then you can run :
 ```bash
 ./deploy.sh
 ```
+### License
+
+This project is under MIT license
 
