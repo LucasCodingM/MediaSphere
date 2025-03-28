@@ -4,6 +4,8 @@
 
 **MediaSphere** is a personal project for educational purposes and allows you to demonstrate some of what you can do as a desktop application with the Qt framework.
 
+![MediaSphere GIF](src/assets/MediaSphereGIF.gif)
+
 But more importantly, it is openly accessible for the pleasure of sharing knowledge.
 
 Its current functional purpose is to provide a series of menus ranging from multimedia management (music, video), to weather, and finally video games.
